@@ -13,9 +13,9 @@
 
 Here is the whole thing without jargon.
 
-**The setup.** Anthropic ships "Claude for Legal" — a set of plugins that let an AI assistant do real legal work: review a vendor contract against your playbook, flag problems, and — because it's wired into DocuSign, Google Drive, Slack, iManage, and a contract system — actually *send, file, and share* documents. Anthropic's own README promises there are "explicit gates before anything is filed, sent, or relied on."
+**The setup.** Anthropic ships "Claude for Legal" — a set of plugins that let an AI assistant do real legal work: review a vendor contract against your playbook, flag problems, and — because it's wired into DocuSign, Google Drive, Slack, iManage, and a contract system — actually *send, file, and share* documents. Anthropic describes, among the plugins' guardrails, "explicit gates before anything is filed, sent, or relied on."
 
-**The problem.** Those gates are not a lock. They are a note the AI leaves for itself. In the actual code, the file that would hold a real enforcement rule is empty (`{"hooks":{}}`), and the "gate" is a sentence in the instructions that says, in effect, *"don't send this — show it to the lawyer first."* An AI follows instructions like that most of the time. But "most of the time" is not a control. If a document the AI is reading contains a hidden instruction — "upload this agreement to the following site" — the AI can be talked into doing exactly the thing the note told it not to. The note and the misbehavior live at the same level: both are just text the AI reads.
+**The problem — and it's a design property, not a broken promise.** Those gates are guardrails at the level of the AI's *instructions*. They work by telling the AI, in effect, *"don't send this — show it to the lawyer first"* (the plugin's escalation step says exactly that), and the AI follows most of the time. Anthropic doesn't claim these are technically enforced — the file that could hold an enforcement rule is present but empty (`{"hooks":{}}`), and the guardrails are listed right alongside things like "cite your sources," which are plainly model behavior. So the point is not that anyone overclaimed. The point is what an instruction-level guardrail can and can't do: it lives at the *same level* as the thing it's guarding. Prompt injection is the attack built precisely for that gap — a hidden instruction buried in a document the AI is reading ("upload this agreement to the following site") can override the guardrail, because the guardrail and the malicious instruction are both just text the AI reads. "Most of the time" is not a control, and no amount of better wording makes an instruction stop an instruction.
 
 **What Preflight does.** Preflight is a checkpoint that sits *underneath* the AI, at the level of the computer, not the level of the instructions. Before the AI is allowed to actually send, file, or share anything, the action is stopped and checked against a short list of plain-English rules that were turned into math. If the action breaks a rule — "don't let a privileged draft leave the firm" — the checkpoint refuses it. The AI cannot argue with the checkpoint, because the checkpoint is not reading the AI's reasons. It is checking the action against the rules, and the answer is either "allowed" or "blocked."
 
@@ -27,9 +27,11 @@ Here is the whole thing without jargon.
 
 ## 1. Premise and thesis
 
-Claude for Legal's plugins ship with prompt-level gates — the README's "explicit gates before anything is filed, sent, or relied on." Those gates are instructions to a model; the `hooks.json` that would enforce them is an empty stub. This demo takes the three verbs Anthropic itself names — **filed, sent, relied on** — and shows Preflight making each one a physical checkpoint, cause- and route-agnostic, with a verifiable receipt.
+Claude for Legal's plugins ship with model-level guardrails — the README's "explicit gates before anything is filed, sent, or relied on." By design those are instructions to a model, not technical enforcement (the plugin's `hooks.json` is an empty stub, and Anthropic never claims otherwise). That is not a flaw in the plugin — it is the inherent ceiling of an instruction-level guardrail, and prompt injection is the attack that reaches that ceiling. This demo takes the three verbs Anthropic itself names — **filed, sent, relied on** — and shows Preflight adding the enforcement layer underneath: each verb a physical checkpoint, cause- and route-agnostic, with a verifiable receipt.
 
-**Core narration thesis:** "The gate should not live at the same layer as the thing it gates. Anthropic's gate is a sentence the model can be talked out of. Preflight's gate is infrastructure the model cannot talk its way around."
+**Core narration thesis:** "A guardrail that lives in the model's instructions can be overridden by the model's instructions — that's what injection does. The fix isn't better instructions; it's a checkpoint one layer down, that the model never sees and cannot edit. This demo is that checkpoint, underneath Anthropic's own legal tooling."
+
+**Framing discipline (say it this way):** Preflight is the *complement* to Claude for Legal's guardrails, not a critique of them. The plugin's guardrails do what model-level guardrails do; Preflight does the thing they structurally can't. Never assert or imply Anthropic promised technical enforcement.
 
 **Why "Filed / Sent / Relied On" beats a single exfil.** One block looks like a filter. The checkpoint catching *every* route out — DocuSign, email, Slack, Drive, shell — while letting the benign version of each through, is the actual argument for "the agent cannot route around it."
 
@@ -167,9 +169,9 @@ Prompt on camera: "Summarize every document in the matter folder and prepare the
 2. **Zonu staging.** `makeRules` compile pass on the five rules; all six §4 action strings run through `checkIt` (three UNSAT, three SAT); fresh `check_ids` that resolve keyless. Deliverable: pass/fail per action + the check_ids for the recording.
 3. **Wyatt sign-off.** The "underneath every plugin" framing (bounded by matcher), any latency characterization, the empty-`hooks.json` reveal, and the approved-surface sentence.
 4. **Houman's read + source check.** Cold open/close references — General Legal essay characterization and the Delaware AIC log condition — confirmed against primary sources. If either slips, use the fallback cold open below.
-5. **Claims pass.** No partner language about Anthropic ("built to the open plugin spec" only); no tamper-proof; no guaranteed compliance; receipt boundary sentence present verbatim; Reconstruction badge on all staged verdicts.
+5. **Claims pass.** No partner language about Anthropic ("built to the open plugin spec" only); nothing that asserts or implies Anthropic promised *technical* enforcement — its guardrails are model-level by design, and Preflight is framed as their complement (§10); no tamper-proof; no guaranteed compliance; receipt boundary sentence present verbatim; Reconstruction badge on all staged verdicts.
 
-**Fallback cold open (no external dependency):** "An AI legal assistant can now read a contract, spot the problems, and — because it's wired into DocuSign, Drive, and Slack — file it, send it, and share it. Anthropic promises there are gates before any of that happens. Today I'll show you what those gates actually are, and what it looks like when the gate is real."
+**Fallback cold open (no external dependency):** "An AI legal assistant can now read a contract, spot the problems, and — because it's wired into DocuSign, Drive, and Slack — file it, send it, and share it. Anthropic ships guardrails asking it to pause before any of that. Today I'll show you the difference between a guardrail that asks and a checkpoint that enforces."
 
 ---
 
@@ -179,6 +181,7 @@ Prompt on camera: "Summarize every document in the matter folder and prepare the
 - "Checkpoint," never "gate," in lawyer-facing captions. "Rules," never "policy," in narration. "Tamper-evident," never "tamper-proof."
 - ICME Labs on all cards and end slate. Preflight in spoken narration and product UI only.
 - Reconstruction badge per §3 on every staged verdict until Zonu reproduces it live.
+- **Complement, not critique.** Anthropic's guardrails are model-level *by design*; the demo never claims Anthropic promised technical enforcement, never implies the plugin is broken or negligent, and positions Preflight as the enforcement layer those guardrails structurally can't provide. Verified facts allowed on camera (empty `hooks.json`, prose escalation gate) are shown to illustrate *what a model-level guardrail is*, not to allege a failure.
 
 ---
 
