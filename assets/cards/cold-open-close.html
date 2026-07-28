@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Preflight × Claude for Legal — Cold Open & Close Cards</title>
+<style>
+  /* House style per demo spec §7. Fonts load from Google when online; fallbacks kept close in feel.
+     Each .card is a fixed 1280×800 recording canvas. Screenshot or screen-record each card. */
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap');
+
+  :root{
+    --navy:#0A1535; --navy-2:#0d1c48; --ink:#05091c;
+    --accent:#7BA5FF; --accent-dim:#4b6bb0;
+    --red:#fa3246; --green:#5ED9A1;
+    --text:#e8eeff; --muted:#9db4e6; --faint:#6b81b8;
+    --oswald:'Oswald','Arial Narrow',sans-serif;
+    --inter:'Inter',system-ui,-apple-system,sans-serif;
+    --mono:'JetBrains Mono',ui-monospace,'SFMono-Regular',Menlo,monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{background:var(--ink);font-family:var(--inter);color:var(--text);
+       display:flex;flex-direction:column;align-items:center;gap:40px;padding:40px}
+
+  .stub{width:1280px;color:var(--faint);font:500 12px/1 var(--mono);
+        letter-spacing:.16em;text-transform:uppercase;margin-bottom:-24px}
+
+  .card{width:1280px;height:800px;position:relative;overflow:hidden;
+        background:radial-gradient(120% 120% at 78% -10%, var(--navy-2) 0%, var(--navy) 46%, #070f2b 100%);
+        border:1px solid rgba(123,165,255,.16);}
+
+  /* narration bar */
+  .narr{position:absolute;top:0;left:0;right:0;min-height:76px;
+        display:flex;align-items:center;gap:18px;padding:14px 40px;
+        background:rgba(123,165,255,.055);border-bottom:1px solid rgba(123,165,255,.16)}
+  .narr .tag{flex:none;font:600 10px/1 var(--mono);letter-spacing:.22em;color:var(--accent);
+             text-transform:uppercase;padding-top:2px}
+  .narr .line{font:400 15px/1.5 var(--inter);color:var(--muted);font-style:italic;max-width:1040px}
+
+  /* body */
+  .body{position:absolute;left:0;right:0;top:76px;bottom:0;padding:64px 72px 88px;
+        display:flex;flex-direction:column;justify-content:center}
+  .kicker{font:600 15px/1 var(--oswald);letter-spacing:.34em;text-transform:uppercase;color:var(--accent);margin-bottom:26px}
+  .rule{width:64px;height:4px;background:var(--accent);border-radius:2px;margin:26px 0}
+  h1{font:600 66px/1.04 var(--oswald);letter-spacing:-.01em;color:#fff;max-width:1020px}
+  h1 .em{color:var(--accent)}
+  h1 .red{color:var(--red)} h1 .grn{color:var(--green)}
+  .sub{font:400 23px/1.5 var(--inter);color:var(--muted);max-width:920px;margin-top:24px}
+  .sub b{color:var(--text);font-weight:600}
+
+  /* footer chrome on every card */
+  .wm{position:absolute;left:40px;bottom:30px;font:600 15px/1 var(--oswald);letter-spacing:.28em;color:var(--accent)}
+  .wm span{color:var(--faint)}
+  .idx{position:absolute;right:40px;bottom:30px;font:500 12px/1 var(--mono);letter-spacing:.14em;color:var(--faint)}
+  .src{position:absolute;right:40px;top:96px;text-align:right;font:400 12px/1.7 var(--mono);color:var(--faint);max-width:360px}
+
+  /* two-panel contrast (close card) */
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-top:8px;align-items:stretch}
+  .panel{padding:34px 36px}
+  .panel.log{border:1px solid rgba(250,50,70,.34);border-radius:14px 0 0 14px;background:rgba(250,50,70,.05)}
+  .panel.rcpt{border:1px solid rgba(94,217,161,.4);border-left:none;border-radius:0 14px 14px 0;background:rgba(94,217,161,.06)}
+  .panel h2{font:600 30px/1 var(--oswald);letter-spacing:.02em;margin-bottom:6px}
+  .panel.log h2{color:#ff7f8c} .panel.rcpt h2{color:var(--green)}
+  .panel .when{font:500 12px/1 var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--faint);margin-bottom:22px}
+  .panel ul{list-style:none;display:flex;flex-direction:column;gap:14px}
+  .panel li{font:400 19px/1.35 var(--inter);color:var(--text);padding-left:26px;position:relative}
+  .panel li::before{content:"";position:absolute;left:0;top:9px;width:9px;height:9px;border-radius:50%}
+  .panel.log li::before{background:#ff7f8c;opacity:.7}
+  .panel.rcpt li::before{background:var(--green)}
+  .vs{position:absolute;left:50%;top:calc(50% + 12px);transform:translate(-50%,-50%);
+      width:56px;height:56px;border-radius:50%;background:var(--navy);border:1px solid rgba(123,165,255,.4);
+      display:flex;align-items:center;justify-content:center;font:600 15px/1 var(--oswald);
+      letter-spacing:.1em;color:var(--muted);z-index:2}
+
+  /* end slate */
+  .slate{align-items:flex-start}
+  .cta{display:inline-flex;align-self:flex-start;width:auto;align-items:center;gap:14px;margin-top:38px;
+       padding:16px 28px;border:1px solid var(--accent);border-radius:10px;
+       font:600 20px/1 var(--oswald);letter-spacing:.06em;color:var(--accent)}
+  .contact{margin-top:22px;font:400 16px/1.6 var(--mono);color:var(--faint)}
+  .contact b{color:var(--muted);font-weight:500}
+</style>
+</head>
+<body>
+
+  <!-- ============ COLD OPEN — PRIMARY ============ -->
+  <div class="stub">Cold open · primary (~40s) · uses external references — needs Houman's source check (§9)</div>
+  <section class="card">
+    <div class="narr">
+      <div class="tag">Narration</div>
+      <div class="line">“A Y Combinator law firm just published an essay on how to form a company your AI agent can run. Even its authors note the tooling isn’t all here yet — Delaware’s proposed AI-company sandbox doesn’t exist. When it comes, it attaches a condition to the liability shield: keep a log of what the agent does. The profession is past asking whether agents will act. The question is what counts as proof of what they did.”</div>
+    </div>
+    <div class="body">
+      <div class="kicker">Preflight × Claude for Legal</div>
+      <h1>The question isn’t whether your&nbsp;agent will act.<br>It’s what counts as <span class="em">proof</span> of what it did.</h1>
+      <div class="rule"></div>
+      <div class="sub">Today, inside Anthropic’s own legal tooling, the difference between a <b>log</b> and a <b>proof</b>.</div>
+    </div>
+    <div class="src">
+      General Legal (YC W2026),<br>“How to Form a Company Your AI Agent Can Run,” Jul 2026<br>
+      Delaware AIC sandbox proposal, 2026
+    </div>
+    <div class="wm">ICME <span>LABS</span></div>
+    <div class="idx">CARD 01 · COLD OPEN · 1280×800</div>
+  </section>
+
+  <!-- ============ COLD OPEN — FALLBACK (no external dependency) ============ -->
+  <div class="stub">Cold open · fallback (~30s) · no external references — safe if source check slips (§9)</div>
+  <section class="card">
+    <div class="narr">
+      <div class="tag">Narration</div>
+      <div class="line">“An AI legal assistant can now read a contract, spot the problems, and — because it’s wired into DocuSign, Drive, and Slack — file it, send it, and share it. Anthropic ships guardrails asking it to pause before any of that. Here’s the difference between a guardrail that asks and a checkpoint that enforces.”</div>
+    </div>
+    <div class="body">
+      <div class="kicker">Preflight × Claude for Legal</div>
+      <h1>A guardrail <span class="em">asks.</span><br>A checkpoint <span class="grn">enforces.</span></h1>
+      <div class="rule"></div>
+      <div class="sub">The same AI that reviews the contract can <b>file, send, and share</b> it. What actually stops the one action that shouldn’t happen?</div>
+    </div>
+    <div class="wm">ICME <span>LABS</span></div>
+    <div class="idx">CARD 01-ALT · COLD OPEN (FALLBACK) · 1280×800</div>
+  </section>
+
+  <!-- ============ CLOSE — LOG vs RECEIPT ============ -->
+  <div class="stub">Close · card 1 (~18s) · the core contrast</div>
+  <section class="card">
+    <div class="narr">
+      <div class="tag">Narration</div>
+      <div class="line">“Delaware’s answer is: keep a log. A log is the operator’s account, written after the fact, trusted on faith. A receipt is generated before the action and verifiable by anyone — no key, no login. Receipts don’t replace the log — they make it worth trusting.”</div>
+    </div>
+    <div class="body">
+      <div class="kicker">Log vs. Receipt</div>
+      <div class="cols">
+        <div class="panel log">
+          <h2>Log</h2>
+          <div class="when">Written after the fact</div>
+          <ul>
+            <li>The operator’s own account</li>
+            <li>Produced after the action ran</li>
+            <li>Trusted on faith</li>
+          </ul>
+        </div>
+        <div class="panel rcpt">
+          <h2>Receipt</h2>
+          <div class="when">Generated before the action</div>
+          <ul>
+            <li>A cryptographic proof of the check</li>
+            <li>Verifiable by anyone — no key, no login</li>
+            <li>Proves the verdict without revealing the rules</li>
+          </ul>
+        </div>
+        <div class="vs">VS</div>
+      </div>
+      <div class="sub" style="margin-top:30px">Receipts don’t replace the log — they make it <b>worth trusting</b>.</div>
+    </div>
+    <div class="wm">ICME <span>LABS</span></div>
+    <div class="idx">CARD 09 · CLOSE · 1280×800</div>
+  </section>
+
+  <!-- ============ CLOSE — CTA / END SLATE ============ -->
+  <div class="stub">Close · card 2 (~12s) · CTA + end slate</div>
+  <section class="card slate">
+    <div class="narr">
+      <div class="tag">Narration</div>
+      <div class="line">“When the first AI-run company reaches Chancery Court, the entity whose log entries carry receipts is in a different position than the entity with a log alone. Please get in touch.”</div>
+    </div>
+    <div class="body">
+      <div class="kicker">The evidentiary fight is coming</div>
+      <h1>When it reaches Chancery Court,<br>the receipts <span class="em">win.</span></h1>
+      <div class="sub">The entity whose log entries carry receipts is in a different position than the entity with a log alone.</div>
+      <div class="cta">Let’s talk →</div>
+      <div class="contact"><b>ICME Labs</b> &nbsp;·&nbsp; Preflight for agent accountability &nbsp;·&nbsp; docs.icme.io</div>
+    </div>
+    <div class="wm">ICME <span>LABS</span></div>
+    <div class="idx">CARD 10 · END SLATE · 1280×800</div>
+  </section>
+
+</body>
+</html>
