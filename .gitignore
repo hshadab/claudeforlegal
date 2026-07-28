@@ -4,3 +4,4 @@ node_modules/
 __pycache__/
 .icme/
 *.env
+assets/cards/cards-preview.png
