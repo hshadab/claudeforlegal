@@ -3,6 +3,13 @@
 End-to-end install for the recording machine. Do this off camera. Where a step depends on the
 live tool's own prompts, that's called out — trust the tool's output over this doc if they differ.
 
+## Which surface (read first — this trips people up)
+The Preflight hook is a **Claude Code PreToolUse hook**. It fires only where Claude Code's hooks run:
+- ✅ **Claude Code CLI** (local), and ✅ the **desktop app's Code tab in a LOCAL session** — both read `~/.claude/settings.json` and fire the hook.
+- ❌ **Desktop Chat tab** (hooks grayed out), ❌ **Cowork tab** (cloud sandbox, config from your claude.ai account, not `~/.claude/`), ❌ desktop **Code tab CLOUD** sessions (server-managed settings, not `~/.claude/`).
+
+**Gotcha:** a plugin installed through the desktop **plugin-marketplace UI** feeds the Chat/Cowork surface — the one the hook does NOT gate. For this demo, install the plugin **inside the Code environment** via `/plugin marketplace add` (below), so plugin + hook share the `~/.claude` layer. So: record in the **CLI** or the **desktop Code tab (local)**, not in Chat or Cowork.
+
 ## 0. Prerequisites
 - **Claude Code** installed and working (`claude` launches).
 - **Node.js 18+** and `npx` on PATH (`node -v`).
