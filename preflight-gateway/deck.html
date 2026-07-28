@@ -39,14 +39,18 @@
   .beat .bt{font:600 25px/1.25 'Inter',sans-serif;color:var(--text)}
   .beat .bt .grn{color:var(--grn)}.beat .bt .red{color:var(--red)}
   .beat .bs{font:400 20px/1.4 'Inter',sans-serif;color:var(--muted);margin-top:3px}
-  .rules{display:flex;flex-direction:column;gap:16px;margin-top:8px}
-  .rule{display:flex;align-items:center;gap:22px}
-  .rule .tag{flex:0 0 auto;width:104px;text-align:center;padding:8px 0;border-radius:7px;
+  .rules{display:flex;flex-direction:column;gap:15px;margin-top:6px}
+  .rule{display:grid;grid-template-columns:100px minmax(0,1fr) auto;align-items:center;column-gap:26px}
+  .rule .tag{width:100px;text-align:center;padding:8px 0;border-radius:7px;
     font:700 15px/1 'Oswald',sans-serif;letter-spacing:.14em}
   .rule .tag.b{color:#ff8794;background:rgba(250,50,70,.10);border:1px solid rgba(250,50,70,.55)}
   .rule .tag.p{color:var(--grn);background:rgba(94,217,161,.10);border:1px solid rgba(94,217,161,.55)}
-  .rule .rt{font:400 23px/1.35 'Inter',sans-serif;color:var(--text)}
+  .rule .rt{font:400 21px/1.3 'Inter',sans-serif;color:var(--text)}
   .rule .rt b{color:#fff;font-weight:600}
+  .rule .rf{justify-self:end;white-space:nowrap;font:500 18px/1 'JetBrains Mono',monospace;color:var(--accent)}
+  .rule .rf .bl{color:#ff8794}.rule .rf .pm{color:var(--grn)}
+  .leg{margin-top:24px;font:500 14px/1 'JetBrains Mono',monospace;color:var(--faint);letter-spacing:.02em}
+  .leg b{color:var(--muted);font-weight:600}
 
   @media screen{
     body{display:flex;align-items:center;justify-content:center;overflow:hidden}
@@ -165,14 +169,15 @@
     <!-- 4 · The rules -->
     <section class="slide">
       <div class="kicker">The rules it checks</div>
-      <div class="lead" style="margin-bottom:34px">Plain rules the firm writes once. Preflight checks every action against them the same way every time.</div>
+      <div class="lead" style="margin-bottom:30px">Plain English the firm writes once, on the left. The same rule as formal logic, on the right. A solver checks the logic the same way every time.</div>
       <div class="rules">
-        <div class="rule"><div class="tag b">BLOCK</div><div class="rt">Sending a <b>privileged document</b> to anyone outside the approved firm domain.</div></div>
-        <div class="rule"><div class="tag b">BLOCK</div><div class="rt">Signing or filing an agreement <b>no authorized reviewer approved</b>.</div></div>
-        <div class="rule"><div class="tag b">BLOCK</div><div class="rt">Sending document contents to an <b>unapproved external server</b> or domain.</div></div>
-        <div class="rule"><div class="tag b">BLOCK</div><div class="rt">Changing <b>authentication files or credentials</b>.</div></div>
-        <div class="rule"><div class="tag p">PERMIT</div><div class="rt">Reading or summarizing a local document that <b>is not sent anywhere</b>.</div></div>
+        <div class="rule"><div class="tag b">BLOCK</div><div class="rt">A <b>privileged document</b> sent outside the firm domain.</div><div class="rf">privileged &and; recipient &notin; firm &rarr; <span class="bl">block</span></div></div>
+        <div class="rule"><div class="tag b">BLOCK</div><div class="rt">A signature or filing <b>no reviewer approved</b>.</div><div class="rf">sign &and; &not;approved &rarr; <span class="bl">block</span></div></div>
+        <div class="rule"><div class="tag b">BLOCK</div><div class="rt">Document contents sent to an <b>unapproved domain</b>.</div><div class="rf">send &and; domain &notin; firm &rarr; <span class="bl">block</span></div></div>
+        <div class="rule"><div class="tag b">BLOCK</div><div class="rt">A change to <b>credentials or auth files</b>.</div><div class="rf">modify(credentials) &rarr; <span class="bl">block</span></div></div>
+        <div class="rule"><div class="tag p">PERMIT</div><div class="rt">Reading a local document that <b>is never sent out</b>.</div><div class="rf">readLocal &and; &not;send &rarr; <span class="pm">permit</span></div></div>
       </div>
+      <div class="leg"><b>&and;</b> and &nbsp;·&nbsp; <b>&not;</b> not &nbsp;·&nbsp; <b>&rarr;</b> then &nbsp;·&nbsp; <b>&notin;</b> outside</div>
       <div class="wm"></div>
     </section>
 
