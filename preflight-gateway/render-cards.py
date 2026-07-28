@@ -28,8 +28,8 @@ h1 .em{color:#7BA5FF}.h1red{color:#fa3246}.h1grn{color:#5ED9A1}
 
 CARDS = [
     dict(name="1-title", kc="", kicker="Preflight × Claude for Legal",
-         h1='A checkpoint the agent<br>can’t <span class="em">talk its way around.</span>',
-         chip="", sub='Runs underneath Claude for Legal, on the surface lawyers actually use.'),
+         h1='Deterministic guardrails,<br>underneath the <span class="em">agent.</span>',
+         chip="", sub='Every consequential action — checked against your rules, sealed in a receipt anyone can verify. Enforced the way DLP already enforces email.'),
     dict(name="2-block", kc="red", kicker="The block",
          h1='Claude <span class="em">asks.</span><br>The checkpoint <span class="h1red">enforces.</span>',
          chip='<div class="chip red">UNSAT · BLOCKED</div>',

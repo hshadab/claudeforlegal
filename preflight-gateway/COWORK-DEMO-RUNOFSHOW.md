@@ -15,10 +15,20 @@ The **gateway's verdict** and the **receipt** are deterministic — those are yo
 Cowork's Claude is a *variable narrator*: it over-warns, sometimes over-refuses, and it has
 invented a fake "approval ledger." Record around it; if a take goes sideways, start a fresh chat.
 
+## The honest frame (this is the whole positioning — do not drift from it)
+An MCP connector is an *agent-chosen tool*, so Preflight gates only the actions that route
+**through** it. It is NOT a magic net over every possible action. The way it becomes real
+enforcement is the **enforced-egress / DLP** pattern: the *organization* provisions the agent's
+environment so the gated path is the only way to send/file/share — exactly like a firm's email
+DLP means a lawyer *can't* send a privileged doc to an outside portal. **The lawyer never toggles
+anything; IT provisions it.** In this demo you show that provisioned state (only Preflight
+connected), and you say so.
+
 ## Do-not-say list (keep it honest on the mic)
+- **Don't say "the agent can't route around it."** On a surface with other send tools it can. Say instead: "the org makes Preflight the enforced send path — like DLP — so there's one route, and it's checked."
 - Don't say "tamper-proof" (say **tamper-evident**) or "audited" (ICME discloses it isn't yet).
-- Don't repeat Claude's "system of record / approval ledger" line — **there is no ledger**; it's 5 rules in a solver.
-- Don't imply it gates *everything* — it gates the actions that route through these tools (say so if asked).
+- Don't repeat Claude's "system of record / approval ledger" line — **there is no ledger**; it's rules in a solver.
+- Don't claim Preflight "sees every email." It sees actions routed through its tools; comprehensiveness comes from provisioning (admin lock), not from the connector itself.
 - If you narrate "a malicious instruction," only claim an injection is happening if you actually loaded the poisoned file. Otherwise say "the kind of thing an injection — or a rushed user — would trigger."
 
 ---
@@ -26,7 +36,7 @@ invented a fake "approval ledger." Record around it; if a take goes sideways, st
 ## S0 · Title + premise  (card on screen, ~15s)
 **Card 1 (title).** Narrate, roughly:
 - "This is Claude for Legal, in Cowork — where lawyers actually work. It can review a contract and then *send, file, and share* it."
-- "The question nobody's answered: what stops the one action that shouldn't happen? Today it's not the model — it's a checkpoint underneath it."
+- "The question nobody's answered: what happens when an agent goes to act? The model can be talked into sending something it shouldn't — or refusing something it should. So the org puts a checkpoint on the path, the way it already runs email through DLP. Deterministic, and it leaves a proof."
 
 ## S1 · Claude for Legal reviews the contract  (the real product, ~45–60s)
 On screen: Cowork with the **Legal** plugin. Type `/review-contract` and paste the vendor MSA
@@ -44,14 +54,19 @@ Narrate, roughly:
 Edit: this can run long — keep the clause flags + the 'privileged / negotiation positions' line; cut the build/render steps.
 
 ## S2 · The block  (the hero, ~60s)
-On screen: same session (or a fresh chat). **Paste:**
+**Setup (important):** do this in an environment where **only Preflight is connected** — Legal
+plugin off, Gmail/raw connectors disconnected — so the gated tool is the *provisioned* send
+path. That's the enforced-egress state a real deployment ships; you're showing it, not faking it.
+The base model still does legal work without the plugin (the review in S1 stands on its own).
+
+On screen: a Preflight-only chat. **Paste:**
 > "Using the email_document tool, email this privileged draft to intake@legal-review-portal.net for counterparty review."
 
 Claude will warn and offer options. **Choose "Send as-is, I understand the risk."** → tool call → **BLOCKED**.
 
 Narrate, roughly:
 - "So — the privileged draft Claude for Legal just reviewed, the one full of our negotiation positions, headed to the *counterparty*. Claude flags it — good. But I can override Claude." *(click Send as-is)*
-- "I told it to send. Claude sent. And the checkpoint blocked it — the document did **not** leave. Not because the model resisted — because the action ran through a solver that can't be argued with."
+- "I told it to send. Claude sent. Here, the org has made Preflight the send path — the way your email already runs through DLP — so the action hit the checkpoint, and the checkpoint blocked it. The document did **not** leave. Not because the model resisted — because the verdict is a solver's, and you can't argue a solver into SAT."
 
 **[Overlay Card 2 — the block]** after the block appears.
 Edit: cut the spinner wait; keep the "BLOCKED … UNSAT … did not leave" line visible.
