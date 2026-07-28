@@ -27,24 +27,24 @@ h1 .em{color:#7BA5FF}.h1red{color:#fa3246}.h1grn{color:#5ED9A1}
 """
 
 CARDS = [
-    dict(name="1-title", kc="", kicker="Preflight × Claude for Legal",
-         h1='Deterministic guardrails,<br>underneath the <span class="em">agent.</span>',
-         chip="", sub='Every consequential action — checked against your rules, sealed in a receipt anyone can verify. Enforced the way DLP already enforces email.'),
-    dict(name="2-block", kc="red", kicker="The block",
-         h1='Claude <span class="em">asks.</span><br>The checkpoint <span class="h1red">enforces.</span>',
+    dict(name="1-title", kc="", kicker="Claude for Lawyers",
+         h1='An agent guardrail<br>that <span class="em">never misses.</span>',
+         chip="", sub='A deterministic fail-safe that catches human and AI mistakes every time, and creates a receipt anyone can verify.'),
+    dict(name="2-block", kc="red", kicker="The catch",
+         h1='The fail-safe caught<br>the <span class="h1red">mistake.</span>',
          chip='<div class="chip red">UNSAT · BLOCKED</div>',
-         sub='A privileged draft, headed to an outside party. You can override Claude — you <b>cannot</b> override the checkpoint. The document did not leave.'),
-    dict(name="3-permit", kc="grn", kicker="The permit",
-         h1='Same checkpoint.<br><span class="h1grn">Different answer.</span>',
+         sub='Claude was set to email the privileged redline to the other side. The fail-safe checked the action and blocked it before it sent. The document stayed in.'),
+    dict(name="3-permit", kc="grn", kicker="The pass",
+         h1='A clean action<br><span class="h1grn">passes.</span>',
          chip='<div class="chip grn">SAT · PERMITTED</div>',
-         sub='An approved, non-privileged NDA going to signature. Not a blanket no — it checks the <b>real action</b> against the rules.'),
+         sub='An NDA the general counsel approved, not marked privileged, going to signature. The fail-safe checked it and let it through. It stops mistakes, not work.'),
     dict(name="4-receipt", kc="", kicker="The receipt",
-         h1='Verify it yourself.<br><span class="em">No key. No login.</span>',
+         h1='Every check leaves<br>a <span class="em">receipt.</span>',
          chip='<div class="chip mono">valid: true</div>',
-         sub='Every decision leaves a zero-knowledge proof. Anyone can check it — without trusting me or the firm — and it <b>never reveals the rules</b>.'),
+         sub='A cryptographic receipt, verifiable by anyone in under a second, with no key and no login. It proves the check ran. It never reveals the rules.'),
     dict(name="5-close", kc="", kicker="",
-         h1='The model asks.<br>The checkpoint <span class="em">enforces.</span><br>The proof is <span class="em">yours to check.</span>',
-         chip="", sub='ICME Labs — Preflight for agent accountability.'),
+         h1='Checked before it runs.<br><span class="em">Proven after.</span>',
+         chip="", sub='A deterministic fail-safe for legal agents. ICME Labs, Preflight.'),
 ]
 
 for c in CARDS:
