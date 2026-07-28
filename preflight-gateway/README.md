@@ -63,9 +63,12 @@ live, on the recognizable surface.
   these tools. If the agent also has the Legal plugin's raw DocuSign/Drive connector, it can
   route around the gate. For a clean demo, make these gated tools the only send/share/sign
   path. For production, lock the plugin's raw write-tools via Enterprise admin controls.
-- **Fail-closed can false-positive.** Benign actions that come back `AR uncertain` (the solver
-  says Satisfiable but ICME's Automated Reasoning abstains) are blocked. Use well-formed action
-  assertions for the permit beat; the approved-signature path passes cleanly.
+- **AR-uncertain is wording-deterministic (Finding 1).** ICME's Automated Reasoning layer sometimes
+  returns `AR uncertain` (solver says Satisfiable, AR abstains) → fail-closed → blocked. Testing showed
+  this is **deterministic by phrasing, not random** (a weak string returned uncertain 3/3; a strengthened
+  string returned SAT 2/2). So the permit tools assert facts explicitly enough for AR to confirm. This is
+  a demo-scoped mitigation, not a product fix — the real fix (reliable AR, or a smarter policy for
+  "uncertain" than hard-block) is an ICME/Wyatt item. Never override ICME's verdict to force a permit.
 - **Data flow.** Whatever hosts this server sees the tool-call contents (document names,
   recipients). Demo data is synthetic. For production, ICME hosts it — with a no-retention /
   encryption story for privileged content.
