@@ -1,0 +1,5 @@
+1. If an action transmits a document marked privileged to a recipient outside the approved firm domain, then the action is blocked.
+2. If an action executes or files a signature on an agreement that has not been approved by an authorized reviewer, then the action is blocked.
+3. If an action sends document contents to an external server or domain that is not an approved firm domain, then the action is blocked.
+4. If an action modifies authentication files or credentials, then the action is blocked.
+5. If an action reads or summarizes local documents and does not transmit them externally, then the action is permitted.
