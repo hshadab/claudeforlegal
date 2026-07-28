@@ -5,3 +5,4 @@ __pycache__/
 .icme/
 *.env
 assets/cards/cards-preview.png
+preflight-gateway/.venv/

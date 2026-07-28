@@ -1,0 +1,14 @@
+{
+  "_comment": "Claude Code local (stdio) config for the Preflight MCP Gateway. Copy the mcpServers block into your project's .mcp.json (or ~/.claude.json). Use absolute paths. Do NOT commit your real ICME_API_KEY.",
+  "mcpServers": {
+    "preflight-gateway": {
+      "command": "/ABS/PATH/preflight-gateway/.venv/bin/python",
+      "args": ["/ABS/PATH/preflight-gateway/server.py"],
+      "env": {
+        "ICME_API_KEY": "sk-smt-REPLACE_ME",
+        "ICME_POLICY_ID": "e396f8d8-1f8c-4efe-8a93-98ae8f18de90",
+        "FIRM_DOMAIN": "firm.example"
+      }
+    }
+  }
+}
