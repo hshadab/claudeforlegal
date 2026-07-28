@@ -50,9 +50,12 @@ python server.py --http --port 8787        # streamable-HTTP on :8787
 ngrok http 8787                            # → https://<random>.ngrok.app   (or: cloudflared tunnel --url http://localhost:8787)
 ```
 
-Then in Cowork: **Settings → Connectors → Add custom connector** → paste the `https://…`
-tunnel URL. The gateway's tools appear in Cowork and the agent calls them — gated, live, on
-the recognizable surface.
+The MCP endpoint is served at **`/mcp`**, so the Cowork connector URL is `https://<tunnel>/mcp`.
+(A plain browser GET returns a `400`/`406` error — that's expected; it means the endpoint is live.)
+
+Then in Cowork: **Customize/Settings → Connectors → Add custom connector** → paste the
+`https://…/mcp` URL. The gateway's tools appear in Cowork and the agent calls them — gated,
+live, on the recognizable surface.
 
 ## Honest notes (read before you demo)
 

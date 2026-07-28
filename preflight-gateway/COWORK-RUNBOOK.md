@@ -30,7 +30,7 @@ Copy the HTTPS forwarding URL (e.g. `https://abc123.ngrok.app`). **Your connecto
 ```
 https://abc123.ngrok.app/mcp
 ```
-Sanity check: open that URL in a browser → **`406 Not Acceptable`**. That's correct — it means the MCP endpoint is live (it only accepts `text/event-stream`).
+Sanity check: open that URL in a browser → an error like **`400`** or **`406`** (NOT a "can't connect" / connection-refused). That's correct — the MCP endpoint is live; it just rejects a plain browser GET because it wants `Accept: text/event-stream`.
 
 > ⚠️ This is an **unauthenticated public endpoint** — anyone with the URL can call it and spend your ICME credits. Use an ephemeral tunnel and tear it down after the demo. (Production: add auth + host it.)
 

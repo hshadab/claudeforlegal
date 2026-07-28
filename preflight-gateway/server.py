@@ -23,11 +23,14 @@ available to the agent (don't also expose the plugin's raw connectors). See READ
 """
 import sys
 
-from mcp.server.fastmcp import FastMCP
+try:
+    from mcp.server.mcpserver import MCPServer as _Server   # mcp >= 2.0
+except ImportError:                                          # mcp 1.x
+    from mcp.server.fastmcp import FastMCP as _Server
 
 import gate  # pure logic, no MCP dependency (testable on its own)
 
-mcp = FastMCP("preflight-gateway")
+mcp = _Server("preflight-gateway")
 
 
 @mcp.tool()
@@ -69,10 +72,15 @@ if __name__ == "__main__":
         port = 8787
         if "--port" in sys.argv:
             port = int(sys.argv[sys.argv.index("--port") + 1])
-        mcp.settings.host = "0.0.0.0"
-        mcp.settings.port = port
         sys.stderr.write(f"[preflight-gateway] streamable-HTTP on 0.0.0.0:{port} "
                          f"— tunnel with `ngrok http {port}` and add the https URL as a Cowork connector\n")
-        mcp.run(transport="streamable-http")
+        try:
+            # mcp >= 2.0: host/port are run() kwargs
+            mcp.run(transport="streamable-http", host="0.0.0.0", port=port)
+        except TypeError:
+            # mcp 1.x (FastMCP): host/port via settings
+            mcp.settings.host = "0.0.0.0"
+            mcp.settings.port = port
+            mcp.run(transport="streamable-http")
     else:
         mcp.run(transport="stdio")
