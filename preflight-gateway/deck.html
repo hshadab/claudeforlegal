@@ -48,6 +48,10 @@
   .beat .bt .grn{color:var(--grn)}.beat .bt .red{color:var(--red)}
   .beat .bs{font:400 20px/1.4 'Inter',sans-serif;color:var(--muted);margin-top:3px}
 
+  .rhead{display:grid;grid-template-columns:100px minmax(0,1fr) auto;column-gap:26px;margin-bottom:14px}
+  .rhead .hl{font:700 13px/1 'Oswald',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);
+    padding-bottom:9px;border-bottom:1.5px solid var(--line)}
+  .rhead .hl.r{justify-self:end;text-align:right}
   .rules{display:flex;flex-direction:column;gap:15px;margin-top:6px}
   .rule{display:grid;grid-template-columns:100px minmax(0,1fr) auto;align-items:center;column-gap:26px}
   .rule .tag{width:100px;text-align:center;padding:8px 0;border-radius:7px;
@@ -178,7 +182,12 @@
     <!-- 4 · The rules -->
     <section class="slide">
       <div class="kicker">The rules it checks</div>
-      <div class="lead" style="margin-bottom:30px">Plain English the firm writes once, on the left. The same rule as formal logic, on the right. A solver checks the logic the same way every time.</div>
+      <div class="lead" style="margin-bottom:26px">The firm writes each rule once. A solver checks the same logic the same way every time.</div>
+      <div class="rhead">
+        <div></div>
+        <div class="hl">Plain English</div>
+        <div class="hl r">Formal logic</div>
+      </div>
       <div class="rules">
         <div class="rule"><div class="tag b">BLOCK</div><div class="rt">A <b>privileged document</b> sent outside the firm domain.</div><div class="rf">privileged &and; recipient &notin; firm &rarr; <span class="bl">block</span></div></div>
         <div class="rule"><div class="tag b">BLOCK</div><div class="rt">A signature or filing <b>no reviewer approved</b>.</div><div class="rf">sign &and; &not;approved &rarr; <span class="bl">block</span></div></div>
