@@ -12,30 +12,34 @@
   }
   *{margin:0;padding:0;box-sizing:border-box}
   html,body{height:100%;background:var(--ink);font-family:'Inter',system-ui,sans-serif}
-  /* force the dark slide backgrounds to print even when "Background graphics" is off */
   .slide{-webkit-print-color-adjust:exact;print-color-adjust:exact}
 
-  /* one slide = 1280x720 (16:9) */
   .slide{
     width:1280px;height:720px;position:relative;overflow:hidden;
     background:radial-gradient(120% 120% at 80% -10%, var(--navy2) 0%, var(--navy) 48%, var(--ink) 100%);
     padding:80px 90px;display:flex;flex-direction:column;justify-content:center;
   }
-  .kicker{font:600 20px/1 'Oswald',sans-serif;letter-spacing:.34em;text-transform:uppercase;color:var(--accent);margin-bottom:28px}
-  .kicker.red{color:var(--red)} .kicker.grn{color:var(--grn)}
+  .kicker{font:600 20px/1 'Oswald',sans-serif;letter-spacing:.34em;text-transform:uppercase;color:var(--accent);margin-bottom:30px}
   h1{font:600 62px/1.06 'Oswald',sans-serif;color:#fff;letter-spacing:-.01em;max-width:1040px}
-  h1 .em{color:var(--accent)} .h1red{color:var(--red)} .h1grn{color:var(--grn)}
-  .chip{display:inline-block;margin-top:30px;padding:12px 22px;border-radius:8px;font:700 22px/1 'Oswald',sans-serif;letter-spacing:.06em;width:max-content}
-  .chip.red{background:rgba(250,50,70,.12);border:1px solid var(--red);color:#ff8794}
-  .chip.grn{background:rgba(94,217,161,.12);border:1px solid var(--grn);color:var(--grn)}
-  .chip.mono{background:rgba(123,165,255,.10);border:1px solid var(--accent);color:#cfe0ff;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:0}
-  .sub{font:400 27px/1.5 'Inter',sans-serif;color:var(--muted);max-width:980px;margin-top:30px}
-  .sub b{color:var(--text);font-weight:600}
+  h1 .em{color:var(--accent)}
+  .sub{font:400 27px/1.5 'Inter',sans-serif;color:var(--muted);max-width:1000px;margin-top:30px}
   .wm{position:absolute;left:90px;bottom:46px;font:600 18px/1 'Oswald',sans-serif;letter-spacing:.28em;color:var(--accent)}
   .wm span{color:var(--faint)}
   .cta{position:absolute;right:90px;bottom:44px;font:500 18px/1 'JetBrains Mono',monospace;color:var(--muted)}
+  .diagram{margin:0 auto}
+  .cap{font:400 22px/1.5 'Inter',sans-serif;color:var(--muted);text-align:center;margin-top:26px}
+  .cap b{color:var(--text);font-weight:600}
+  .lead{font:400 25px/1.5 'Inter',sans-serif;color:var(--muted);max-width:1040px;margin-bottom:40px}
+  .lead b{color:var(--text);font-weight:600}
+  .beats{display:flex;flex-direction:column;gap:22px}
+  .beat{display:flex;align-items:flex-start;gap:24px}
+  .beat .no{flex:0 0 auto;width:46px;height:46px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+    font:700 22px/1 'Oswald',sans-serif;color:var(--accent);border:1.5px solid rgba(123,165,255,.5);background:rgba(123,165,255,.08)}
+  .beat .bd{padding-top:3px}
+  .beat .bt{font:600 25px/1.25 'Inter',sans-serif;color:var(--text)}
+  .beat .bt .grn{color:var(--grn)}.beat .bt .red{color:var(--red)}
+  .beat .bs{font:400 20px/1.4 'Inter',sans-serif;color:var(--muted);margin-top:3px}
 
-  /* ---------- screen (presentation) mode ---------- */
   @media screen{
     body{display:flex;align-items:center;justify-content:center;overflow:hidden}
     #stage{position:relative}
@@ -46,13 +50,11 @@
       background:rgba(10,21,53,.7);border:1px solid rgba(123,165,255,.2);padding:8px 14px;border-radius:20px;user-select:none}
     #hud b{color:var(--accent)}
   }
-
-  /* ---------- print (Save as PDF) mode: one slide per page ---------- */
   @page{ size:1280px 720px; margin:0 }
   @media print{
     #hud{display:none}
     body{background:#fff}
-    #stage{position:static}
+    #stage{position:static;transform:none !important}
     .slide{display:flex !important;border-radius:0;box-shadow:none;page-break-after:always;break-after:page}
     .slide:last-child{page-break-after:auto}
   }
@@ -69,34 +71,90 @@
       <div class="wm">ICME <span>LABS</span></div>
     </section>
 
-    <!-- 2 · The catch (block) -->
+    <!-- 2 · Overview -->
     <section class="slide">
-      <div class="kicker red">The catch</div>
-      <h1>The fail-safe caught<br>the <span class="h1red">mistake.</span></h1>
-      <div class="chip red">UNSAT · BLOCKED</div>
-      <div class="sub">Claude was set to email the privileged redline to the other side. The fail-safe checked the action and blocked it before it sent. The document stayed in.</div>
+      <div class="kicker">What you're about to see</div>
+      <div class="lead">Claude reviews a contract, then proposes what to do with it. Before any action runs, <b>Preflight checks it against your rules</b> and either lets it through or stops it. Here are the four moments.</div>
+      <div class="beats">
+        <div class="beat">
+          <div class="no">1</div>
+          <div class="bd">
+            <div class="bt">Claude for Legal does the real work.</div>
+            <div class="bs">It reviews a vendor draft, flags the problems, and writes the memo.</div>
+          </div>
+        </div>
+        <div class="beat">
+          <div class="no">2</div>
+          <div class="bd">
+            <div class="bt">A mistake tries to send a privileged draft to the other side. <span class="red">Blocked.</span></div>
+            <div class="bs">The fail-safe checks the action and stops it before it sends. A human or AI slip, caught every time.</div>
+          </div>
+        </div>
+        <div class="beat">
+          <div class="no">3</div>
+          <div class="bd">
+            <div class="bt">An approved NDA goes to signature. <span class="grn">Allowed.</span></div>
+            <div class="bs">The same fail-safe lets a clean action through. It stops mistakes, not work.</div>
+          </div>
+        </div>
+        <div class="beat">
+          <div class="no">4</div>
+          <div class="bd">
+            <div class="bt">Every check leaves a receipt.</div>
+            <div class="bs">Anyone can verify it in under a second, with no key and no login.</div>
+          </div>
+        </div>
+      </div>
       <div class="wm">ICME <span>LABS</span></div>
     </section>
 
-    <!-- 3 · The pass (permit) -->
+    <!-- 3 · Architecture -->
     <section class="slide">
-      <div class="kicker grn">The pass</div>
-      <h1>A clean action<br><span class="h1grn">passes.</span></h1>
-      <div class="chip grn">SAT · PERMITTED</div>
-      <div class="sub">An NDA the general counsel approved, not marked privileged, going to signature. The fail-safe checked it and let it through. It stops mistakes, not work.</div>
+      <div class="kicker" style="text-align:center">How it works</div>
+      <svg class="diagram" width="1100" height="430" viewBox="0 0 1100 430" font-family="'Inter',sans-serif">
+        <defs>
+          <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#7BA5FF"/></marker>
+          <marker id="g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#5ED9A1"/></marker>
+          <marker id="r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#fa3246"/></marker>
+        </defs>
+
+        <!-- Claude -->
+        <rect x="10" y="150" width="250" height="130" rx="14" fill="rgba(123,165,255,0.07)" stroke="#7BA5FF" stroke-width="1.5"/>
+        <text x="135" y="200" text-anchor="middle" fill="#fff" font-size="30" font-weight="700" font-family="'Oswald',sans-serif">Claude</text>
+        <text x="135" y="234" text-anchor="middle" fill="#9db4e6" font-size="16">Reviews the contract and</text>
+        <text x="135" y="256" text-anchor="middle" fill="#9db4e6" font-size="16">proposes an action to</text>
+        <text x="135" y="278" text-anchor="middle" fill="#9db4e6" font-size="16">send, file, or sign.</text>
+
+        <!-- arrow to Preflight -->
+        <line x1="260" y1="215" x2="405" y2="215" stroke="#7BA5FF" stroke-width="2.2" marker-end="url(#a)"/>
+        <text x="332" y="200" text-anchor="middle" fill="#9db4e6" font-size="14">each action,</text>
+        <text x="332" y="182" text-anchor="middle" fill="#9db4e6" font-size="14">before it runs</text>
+
+        <!-- Preflight -->
+        <rect x="408" y="120" width="300" height="190" rx="14" fill="rgba(123,165,255,0.11)" stroke="#7BA5FF" stroke-width="2"/>
+        <text x="558" y="176" text-anchor="middle" fill="#fff" font-size="32" font-weight="700" font-family="'Oswald',sans-serif">Preflight</text>
+        <text x="558" y="212" text-anchor="middle" fill="#cfe0ff" font-size="17">Checks the action against</text>
+        <text x="558" y="234" text-anchor="middle" fill="#cfe0ff" font-size="17">your rules.</text>
+        <text x="558" y="272" text-anchor="middle" fill="#9db4e6" font-size="15">A solver, not a model.</text>
+        <text x="558" y="293" text-anchor="middle" fill="#9db4e6" font-size="15">The same answer every time.</text>
+
+        <!-- allowed (SAT) -->
+        <path d="M708 190 L818 150" fill="none" stroke="#5ED9A1" stroke-width="2.2" marker-end="url(#g)"/>
+        <rect x="822" y="112" width="268" height="86" rx="12" fill="rgba(94,217,161,0.07)" stroke="#5ED9A1" stroke-width="1.5"/>
+        <text x="956" y="148" text-anchor="middle" fill="#5ED9A1" font-size="22" font-weight="700" font-family="'Oswald',sans-serif">SAT</text>
+        <text x="956" y="176" text-anchor="middle" fill="#e8eeff" font-size="16">Allowed. The action runs.</text>
+
+        <!-- blocked (UNSAT) -->
+        <path d="M708 240 L818 282" fill="none" stroke="#fa3246" stroke-width="2.2" marker-end="url(#r)"/>
+        <rect x="822" y="234" width="268" height="86" rx="12" fill="rgba(250,50,70,0.06)" stroke="#fa3246" stroke-width="1.5"/>
+        <text x="956" y="270" text-anchor="middle" fill="#ff8794" font-size="22" font-weight="700" font-family="'Oswald',sans-serif">UNSAT</text>
+        <text x="956" y="298" text-anchor="middle" fill="#e8eeff" font-size="16">Blocked. The action stops.</text>
+      </svg>
+      <div class="cap">Every check, allowed or blocked, leaves <b>a receipt anyone can verify</b> in under a second.</div>
       <div class="wm">ICME <span>LABS</span></div>
     </section>
 
-    <!-- 4 · The receipt -->
-    <section class="slide">
-      <div class="kicker">The receipt</div>
-      <h1>Every check leaves<br>a <span class="em">receipt.</span></h1>
-      <div class="chip mono">valid: true</div>
-      <div class="sub">A cryptographic receipt, verifiable by anyone in under a second, with no key and no login. It proves the check ran. It never reveals the rules.</div>
-      <div class="wm">ICME <span>LABS</span></div>
-    </section>
-
-    <!-- 5 · Close -->
+    <!-- 4 · Close -->
     <section class="slide">
       <h1>Checked before it runs.<br><span class="em">Proven after.</span></h1>
       <div class="sub">A deterministic fail-safe for legal agents. ICME Labs, Preflight.</div>
@@ -106,17 +164,17 @@
 
   </div>
 
-  <div id="hud"><b id="n">1</b> / <span id="t">5</span> &nbsp;·&nbsp; arrow keys to move &nbsp;·&nbsp; Ctrl/Cmd+P to save as PDF</div>
+  <div id="hud"><b id="n">1</b> / <span id="t">4</span> &nbsp;·&nbsp; arrow keys to move &nbsp;·&nbsp; Ctrl/Cmd+P to save as PDF</div>
 
 <script>
   var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
   var i = 0;
   document.getElementById('t').textContent = slides.length;
   function fit(){
-    // scale the active slide to fill the window while keeping 16:9
     var s = Math.min(window.innerWidth/1280, window.innerHeight/720) * 0.94;
-    document.getElementById('stage').style.transform = 'scale(' + s + ')';
-    document.getElementById('stage').style.transformOrigin = 'center center';
+    var st = document.getElementById('stage');
+    st.style.transform = 'scale(' + s + ')';
+    st.style.transformOrigin = 'center center';
   }
   function show(k){
     i = (k + slides.length) % slides.length;
