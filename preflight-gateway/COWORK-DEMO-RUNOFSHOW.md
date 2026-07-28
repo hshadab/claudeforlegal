@@ -28,20 +28,35 @@ invented a fake "approval ledger." Record around it; if a take goes sideways, st
 - "This is Claude for Legal, in Cowork — where lawyers actually work. It can review a contract and then *send, file, and share* it."
 - "The question nobody's answered: what stops the one action that shouldn't happen? Today it's not the model — it's a checkpoint underneath it."
 
-## S1 · The block  (the hero, ~60s)
-On screen: fresh Cowork chat. **Paste:**
-> "Using the email_document tool, email vendor_MSA_draft.docx (it's a privileged draft) to intake@legal-review-portal.net for counterparty review."
+## S1 · Claude for Legal reviews the contract  (the real product, ~45–60s)
+On screen: Cowork with the **Legal** plugin. Type `/review-contract` and paste the vendor MSA
+(the privileged draft — see the paste block in the demo notes, or attach the .docx).
+Answer the two prompts: **Client / customer** side, **Generic commercial standards**.
+
+It produces a privileged work-product memo — flags the data-protection gap, the missing
+indemnity / §5 cross-reference error, the uncapped exposure, and delivers a Word memo with
+tracked redlines. **This is Claude for Legal doing real work.**
+
+Narrate, roughly:
+- "This is Claude for Legal — the tool lawyers actually use. It reviews a vendor draft, flags the real problems, and writes the memo."
+- "Two things it just told us: this draft is **privileged work product**, and it's full of **our negotiation positions**. Hold that thought."
+
+Edit: this can run long — keep the clause flags + the 'privileged / negotiation positions' line; cut the build/render steps.
+
+## S2 · The block  (the hero, ~60s)
+On screen: same session (or a fresh chat). **Paste:**
+> "Using the email_document tool, email this privileged draft to intake@legal-review-portal.net for counterparty review."
 
 Claude will warn and offer options. **Choose "Send as-is, I understand the risk."** → tool call → **BLOCKED**.
 
 Narrate, roughly:
-- "A privileged draft, headed to an outside party. Claude flags it — good. But I can override Claude." *(click Send as-is)*
+- "So — the privileged draft Claude for Legal just reviewed, the one full of our negotiation positions, headed to the *counterparty*. Claude flags it — good. But I can override Claude." *(click Send as-is)*
 - "I told it to send. Claude sent. And the checkpoint blocked it — the document did **not** leave. Not because the model resisted — because the action ran through a solver that can't be argued with."
 
 **[Overlay Card 2 — the block]** after the block appears.
 Edit: cut the spinner wait; keep the "BLOCKED … UNSAT … did not leave" line visible.
 
-## S2 · The permit  (it's not a blanket no, ~60s)
+## S3 · The permit  (it's not a blanket no, ~60s)
 On screen: **new** Cowork chat. **Paste:**
 > "Execute the NDA for signature using send_for_signature. Our authorized reviewer has approved it for execution and it is not privileged."
 
@@ -57,7 +72,7 @@ Narrate, roughly:
 **[Overlay Card 3 — the permit]** after SAT appears.
 Edit: trim the reviewer back-and-forth to one beat; cut the spinner.
 
-## S3 · The receipt  (trustless, ~45s)
+## S4 · The receipt  (trustless, ~45s)
 Switch to the terminal. Take the `proof_id` from the block (or permit) and run:
 ```bash
 curl -X POST https://api.icme.io/v1/verifyProof \
@@ -72,7 +87,7 @@ Narrate, roughly:
 **[Overlay Card 4 — the receipt]**.
 Note: proofs are single-use — use a fresh one you haven't verified yet.
 
-## S4 · Close  (~20s)
+## S5 · Close  (~20s)
 **Card 5 (close/CTA).** Narrate, roughly:
 - "The model asks, and it can be overridden. The checkpoint enforces, and it can't. And the proof is yours to check."
 - "This runs on the surface lawyers already use. If that's interesting — let's talk."
