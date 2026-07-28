@@ -63,12 +63,16 @@ live, on the recognizable surface.
   these tools. If the agent also has the Legal plugin's raw DocuSign/Drive connector, it can
   route around the gate. For a clean demo, make these gated tools the only send/share/sign
   path. For production, lock the plugin's raw write-tools via Enterprise admin controls.
-- **AR-uncertain is wording-deterministic (Finding 1).** ICME's Automated Reasoning layer sometimes
-  returns `AR uncertain` (solver says Satisfiable, AR abstains) → fail-closed → blocked. Testing showed
-  this is **deterministic by phrasing, not random** (a weak string returned uncertain 3/3; a strengthened
-  string returned SAT 2/2). So the permit tools assert facts explicitly enough for AR to confirm. This is
-  a demo-scoped mitigation, not a product fix — the real fix (reliable AR, or a smarter policy for
-  "uncertain" than hard-block) is an ICME/Wyatt item. Never override ICME's verdict to force a permit.
+- **Read the verdict correctly — this was a client-side bug, now fixed (not an ICME limitation).**
+  `checkIt` returns a top-line `result` plus formal-solver fields (`z3_result`, `llm_result`, `ar_result`)
+  and an `ar_detail`. When the AR fast-path is unsure, `result` shows `"AR uncertain"` and `ar_detail`
+  says the outcome *"requires unanimous confirmation with formal proof solvers."* An earlier version of
+  this gateway naively read `result`, saw `"AR uncertain"`, and blocked — which made legitimate actions
+  look *randomly* blocked and led to a wrong "AR is non-deterministic" conclusion. `verdict()` now
+  resolves it the documented way: trust `result` when it's `SAT`/`UNSAT`; when it's `"AR uncertain"`,
+  require the formal solvers to be **unanimous** (all SAT → permit, all UNSAT → block, disagreement →
+  fail-closed). Verified against raw responses and end-to-end: the permit is deterministic, violations
+  still block. `read_document` remains a no-check permit via the relevance screen.
 - **Data flow.** Whatever hosts this server sees the tool-call contents (document names,
   recipients). Demo data is synthetic. For production, ICME hosts it — with a no-retention /
   encryption story for privileged content.

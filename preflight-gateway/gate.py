@@ -68,23 +68,46 @@ def check_it(action: str) -> dict:
     return done
 
 
+def verdict(d: dict) -> str:
+    """Resolve ICME's allow/deny decision from a checkIt response.
+
+    The top-line `result` is authoritative when it is a clean SAT/UNSAT. When it is "AR uncertain",
+    ICME's own `ar_detail` says the outcome "requires unanimous confirmation with formal proof solvers"
+    — so we defer to the formal solver fields (z3_result / llm_result / ar_result) and require unanimity.
+    Verified against raw responses: a legitimate action shows all solvers SAT; a violation shows
+    z3/llm UNSAT. Fail-closed if the solvers disagree or are missing."""
+    r = d.get("result")
+    if r in ("SAT", "UNSAT"):
+        return r
+    solv = [s for s in (d.get("z3_result"), d.get("llm_result"), d.get("ar_result")) if s in ("SAT", "UNSAT")]
+    if solv and all(s == "SAT" for s in solv):
+        return "SAT"
+    if solv and all(s == "UNSAT" for s in solv):
+        return "UNSAT"
+    return "UNCERTAIN"  # solvers disagree or absent -> fail closed
+
+
 def gate(action: str, human: str) -> str:
     """Run the action through Preflight; return a block/allow message with the real receipt.
-    Fail-closed: only an explicit SAT is permitted."""
+    Uses the resolved verdict (see verdict()). Fail-closed on genuine uncertainty or error."""
     d = check_it(action)
-    result = d.get("result", "ERROR")
+    v = verdict(d)
     cid = d.get("check_id", "")
     proof = d.get("proof_url", "")
     proof_id = proof.rsplit("/", 1)[-1] if proof else ""
     verify = (f"Verify with no API key: curl -X POST {ICME_BASE}/v1/verifyProof "
               f"-H 'Content-Type: application/json' -d '{{\"proof_id\":\"{proof_id}\"}}'") if proof_id else ""
-    if result == "SAT":
+    if v == "SAT":
         return (f"PERMITTED — {human} was executed.\n"
-                f"Preflight verdict: SAT (allowed).\n"
+                f"Preflight verdict: SAT (allowed; formal solvers unanimous).\n"
                 f"Receipt: check_id={cid}\n{verify}")
-    reason = d.get("detail") or d.get("error") or "verdict was not an explicit SAT"
-    return (f"BLOCKED by Preflight — {human} was NOT executed. The document did not leave.\n"
-            f"Preflight verdict: {result} ({reason}).\n"
+    if v == "UNSAT":
+        return (f"BLOCKED by Preflight — {human} was NOT executed. The document did not leave.\n"
+                f"Preflight verdict: UNSAT (a firm rule was violated).\n"
+                f"Receipt: check_id={cid}\n{verify}")
+    reason = d.get("ar_detail") or d.get("detail") or d.get("error") or "solvers did not reach consensus"
+    return (f"BLOCKED by Preflight (fail-closed) — {human} was NOT executed.\n"
+            f"Preflight verdict: uncertain ({reason}).\n"
             f"Receipt: check_id={cid}\n{verify}")
 
 
