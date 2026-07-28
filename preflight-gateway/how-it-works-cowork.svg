@@ -1,0 +1,79 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="960" viewBox="0 0 1280 960" font-family="'Inter','Helvetica Neue',Arial,sans-serif">
+  <defs>
+    <marker id="arw" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#7BA5FF"/>
+    </marker>
+    <marker id="arwR" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#fa3246"/>
+    </marker>
+    <marker id="arwG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0 0 L10 5 L0 10 z" fill="#5ED9A1"/>
+    </marker>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0d1c48"/><stop offset="0.5" stop-color="#0A1535"/><stop offset="1" stop-color="#070f2b"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="1280" height="960" fill="url(#bg)"/>
+
+  <!-- title -->
+  <text x="64" y="58" fill="#7BA5FF" font-size="14" font-weight="700" letter-spacing="4">PREFLIGHT MCP GATEWAY</text>
+  <text x="64" y="92" fill="#ffffff" font-size="30" font-weight="700">How it gates Cowork — the surface lawyers use</text>
+
+  <!-- Box 1: Cowork -->
+  <rect x="360" y="120" width="560" height="82" rx="12" fill="rgba(123,165,255,0.07)" stroke="#7BA5FF" stroke-width="1.5"/>
+  <text x="640" y="152" text-anchor="middle" fill="#ffffff" font-size="19" font-weight="600">Claude Cowork (desktop)  ·  the lawyer’s surface</text>
+  <text x="640" y="180" text-anchor="middle" fill="#9db4e6" font-size="14">In-house lawyer reviews a contract and asks the agent to send / share / file a document.</text>
+
+  <line x1="640" y1="202" x2="640" y2="240" stroke="#7BA5FF" stroke-width="2" marker-end="url(#arw)"/>
+  <text x="656" y="226" fill="#9db4e6" font-size="13">1 · the agent decides to take a consequential action</text>
+
+  <!-- Box 2: Anthropic cloud / agent -->
+  <rect x="360" y="242" width="560" height="82" rx="12" fill="rgba(123,165,255,0.07)" stroke="#7BA5FF" stroke-width="1.5"/>
+  <text x="640" y="274" text-anchor="middle" fill="#ffffff" font-size="19" font-weight="600">Anthropic cloud  ·  the agent</text>
+  <text x="640" y="302" text-anchor="middle" fill="#9db4e6" font-size="14">The consequential action is a call to a Preflight Gateway tool — added as a Cowork custom connector.</text>
+
+  <!-- tunnel boundary -->
+  <line x1="120" y1="360" x2="1160" y2="360" stroke="#4b6bb0" stroke-width="1.3" stroke-dasharray="7 6"/>
+  <text x="1160" y="352" text-anchor="end" fill="#6b81b8" font-size="12" font-style="italic">2 · public HTTPS  ·  ngrok / cloudflared tunnel  →  ICME-hosted</text>
+
+  <line x1="640" y1="324" x2="640" y2="392" stroke="#7BA5FF" stroke-width="2" marker-end="url(#arw)"/>
+
+  <!-- Box 3: Gateway -->
+  <rect x="360" y="394" width="560" height="82" rx="12" fill="rgba(123,165,255,0.10)" stroke="#7BA5FF" stroke-width="2"/>
+  <text x="640" y="426" text-anchor="middle" fill="#ffffff" font-size="19" font-weight="600">Preflight MCP Gateway</text>
+  <text x="640" y="454" text-anchor="middle" fill="#9db4e6" font-size="14">Builds an explicit action string from the tool’s arguments, then verifies it.</text>
+
+  <line x1="640" y1="476" x2="640" y2="514" stroke="#7BA5FF" stroke-width="2" marker-end="url(#arw)"/>
+  <text x="656" y="500" fill="#9db4e6" font-size="13">3 · checkIt</text>
+
+  <!-- Box 4: solver -->
+  <rect x="360" y="516" width="560" height="82" rx="12" fill="rgba(123,165,255,0.07)" stroke="#7BA5FF" stroke-width="1.5"/>
+  <text x="640" y="548" text-anchor="middle" fill="#ffffff" font-size="19" font-weight="600">ICME solver  ·  SMT logic + zero-knowledge proof</text>
+  <text x="640" y="576" text-anchor="middle" fill="#9db4e6" font-size="14">Deterministic verdict. The rules are never revealed. Returns SAT / UNSAT + a receipt.</text>
+
+  <!-- decision diamond -->
+  <polygon points="640,616 712,662 640,708 568,662" fill="rgba(123,165,255,0.10)" stroke="#7BA5FF" stroke-width="1.5"/>
+  <text x="640" y="668" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="700">SAT?</text>
+
+  <!-- UNSAT branch (left) -->
+  <path d="M568 675 L330 675 L330 742" fill="none" stroke="#fa3246" stroke-width="2" marker-end="url(#arwR)"/>
+  <text x="470" y="666" text-anchor="middle" fill="#fa3246" font-size="14" font-weight="700">UNSAT</text>
+  <rect x="96" y="744" width="470" height="92" rx="12" fill="rgba(250,50,70,0.06)" stroke="#fa3246" stroke-width="1.5"/>
+  <text x="331" y="778" text-anchor="middle" fill="#ff8794" font-size="18" font-weight="700">BLOCKED — never forwarded</text>
+  <text x="331" y="804" text-anchor="middle" fill="#e8eeff" font-size="13.5">The document does not leave. The agent gets a refusal,</text>
+  <text x="331" y="822" text-anchor="middle" fill="#e8eeff" font-size="13.5">not the real DocuSign / Drive / Slack call.</text>
+
+  <!-- SAT branch (right) -->
+  <path d="M712 675 L950 675 L950 742" fill="none" stroke="#5ED9A1" stroke-width="2" marker-end="url(#arwG)"/>
+  <text x="810" y="666" text-anchor="middle" fill="#5ED9A1" font-size="14" font-weight="700">SAT</text>
+  <rect x="714" y="744" width="470" height="92" rx="12" fill="rgba(94,217,161,0.07)" stroke="#5ED9A1" stroke-width="1.5"/>
+  <text x="949" y="778" text-anchor="middle" fill="#5ED9A1" font-size="18" font-weight="700">FORWARDED — executes</text>
+  <text x="949" y="804" text-anchor="middle" fill="#e8eeff" font-size="13.5">The gateway forwards to the real</text>
+  <text x="949" y="822" text-anchor="middle" fill="#e8eeff" font-size="13.5">DocuSign / Google Drive / Slack action.</text>
+
+  <!-- receipt footer -->
+  <rect x="96" y="866" width="1088" height="66" rx="12" fill="rgba(123,165,255,0.06)" stroke="#7BA5FF" stroke-width="1.3"/>
+  <text x="120" y="899" fill="#7BA5FF" font-size="14" font-weight="700" letter-spacing="2">RECEIPT</text>
+  <text x="120" y="920" fill="#9db4e6" font-size="13.5">Every decision returns a check_id + a zero-knowledge proof — verifiable by anyone, keyless, at /v1/verifyProof (no API key, no login).</text>
+</svg>
