@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Claude for Lawyers — An Agent Guardrail That Never Misses</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@500&display=swap');
+  :root{
+    --navy:#0A1535; --navy2:#0d1c48; --ink:#070f2b;
+    --accent:#7BA5FF; --red:#fa3246; --grn:#5ED9A1;
+    --text:#e8eeff; --muted:#9db4e6; --faint:#6b81b8;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  html,body{height:100%;background:var(--ink);font-family:'Inter',system-ui,sans-serif}
+  /* force the dark slide backgrounds to print even when "Background graphics" is off */
+  .slide{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+
+  /* one slide = 1280x720 (16:9) */
+  .slide{
+    width:1280px;height:720px;position:relative;overflow:hidden;
+    background:radial-gradient(120% 120% at 80% -10%, var(--navy2) 0%, var(--navy) 48%, var(--ink) 100%);
+    padding:80px 90px;display:flex;flex-direction:column;justify-content:center;
+  }
+  .kicker{font:600 20px/1 'Oswald',sans-serif;letter-spacing:.34em;text-transform:uppercase;color:var(--accent);margin-bottom:28px}
+  .kicker.red{color:var(--red)} .kicker.grn{color:var(--grn)}
+  h1{font:600 62px/1.06 'Oswald',sans-serif;color:#fff;letter-spacing:-.01em;max-width:1040px}
+  h1 .em{color:var(--accent)} .h1red{color:var(--red)} .h1grn{color:var(--grn)}
+  .chip{display:inline-block;margin-top:30px;padding:12px 22px;border-radius:8px;font:700 22px/1 'Oswald',sans-serif;letter-spacing:.06em;width:max-content}
+  .chip.red{background:rgba(250,50,70,.12);border:1px solid var(--red);color:#ff8794}
+  .chip.grn{background:rgba(94,217,161,.12);border:1px solid var(--grn);color:var(--grn)}
+  .chip.mono{background:rgba(123,165,255,.10);border:1px solid var(--accent);color:#cfe0ff;font-family:'JetBrains Mono',monospace;font-size:24px;font-weight:500;letter-spacing:0}
+  .sub{font:400 27px/1.5 'Inter',sans-serif;color:var(--muted);max-width:980px;margin-top:30px}
+  .sub b{color:var(--text);font-weight:600}
+  .wm{position:absolute;left:90px;bottom:46px;font:600 18px/1 'Oswald',sans-serif;letter-spacing:.28em;color:var(--accent)}
+  .wm span{color:var(--faint)}
+  .cta{position:absolute;right:90px;bottom:44px;font:500 18px/1 'JetBrains Mono',monospace;color:var(--muted)}
+
+  /* ---------- screen (presentation) mode ---------- */
+  @media screen{
+    body{display:flex;align-items:center;justify-content:center;overflow:hidden}
+    #stage{position:relative}
+    .slide{display:none;box-shadow:0 30px 80px rgba(0,0,0,.5);border-radius:10px}
+    .slide.active{display:flex}
+    #hud{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);
+      font:500 13px/1 'JetBrains Mono',monospace;color:var(--faint);letter-spacing:.1em;
+      background:rgba(10,21,53,.7);border:1px solid rgba(123,165,255,.2);padding:8px 14px;border-radius:20px;user-select:none}
+    #hud b{color:var(--accent)}
+  }
+
+  /* ---------- print (Save as PDF) mode: one slide per page ---------- */
+  @page{ size:1280px 720px; margin:0 }
+  @media print{
+    #hud{display:none}
+    body{background:#fff}
+    #stage{position:static}
+    .slide{display:flex !important;border-radius:0;box-shadow:none;page-break-after:always;break-after:page}
+    .slide:last-child{page-break-after:auto}
+  }
+</style>
+</head>
+<body>
+  <div id="stage">
+
+    <!-- 1 · Title -->
+    <section class="slide active">
+      <div class="kicker">Claude for Lawyers</div>
+      <h1>An agent guardrail<br>that <span class="em">never misses.</span></h1>
+      <div class="sub">A deterministic fail-safe that catches human and AI mistakes every time, and creates a receipt anyone can verify.</div>
+      <div class="wm">ICME <span>LABS</span></div>
+    </section>
+
+    <!-- 2 · The catch (block) -->
+    <section class="slide">
+      <div class="kicker red">The catch</div>
+      <h1>The fail-safe caught<br>the <span class="h1red">mistake.</span></h1>
+      <div class="chip red">UNSAT · BLOCKED</div>
+      <div class="sub">Claude was set to email the privileged redline to the other side. The fail-safe checked the action and blocked it before it sent. The document stayed in.</div>
+      <div class="wm">ICME <span>LABS</span></div>
+    </section>
+
+    <!-- 3 · The pass (permit) -->
+    <section class="slide">
+      <div class="kicker grn">The pass</div>
+      <h1>A clean action<br><span class="h1grn">passes.</span></h1>
+      <div class="chip grn">SAT · PERMITTED</div>
+      <div class="sub">An NDA the general counsel approved, not marked privileged, going to signature. The fail-safe checked it and let it through. It stops mistakes, not work.</div>
+      <div class="wm">ICME <span>LABS</span></div>
+    </section>
+
+    <!-- 4 · The receipt -->
+    <section class="slide">
+      <div class="kicker">The receipt</div>
+      <h1>Every check leaves<br>a <span class="em">receipt.</span></h1>
+      <div class="chip mono">valid: true</div>
+      <div class="sub">A cryptographic receipt, verifiable by anyone in under a second, with no key and no login. It proves the check ran. It never reveals the rules.</div>
+      <div class="wm">ICME <span>LABS</span></div>
+    </section>
+
+    <!-- 5 · Close -->
+    <section class="slide">
+      <h1>Checked before it runs.<br><span class="em">Proven after.</span></h1>
+      <div class="sub">A deterministic fail-safe for legal agents. ICME Labs, Preflight.</div>
+      <div class="wm">ICME <span>LABS</span></div>
+      <div class="cta">docs.icme.io</div>
+    </section>
+
+  </div>
+
+  <div id="hud"><b id="n">1</b> / <span id="t">5</span> &nbsp;·&nbsp; arrow keys to move &nbsp;·&nbsp; Ctrl/Cmd+P to save as PDF</div>
+
+<script>
+  var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
+  var i = 0;
+  document.getElementById('t').textContent = slides.length;
+  function fit(){
+    // scale the active slide to fill the window while keeping 16:9
+    var s = Math.min(window.innerWidth/1280, window.innerHeight/720) * 0.94;
+    document.getElementById('stage').style.transform = 'scale(' + s + ')';
+    document.getElementById('stage').style.transformOrigin = 'center center';
+  }
+  function show(k){
+    i = (k + slides.length) % slides.length;
+    slides.forEach(function(s,idx){ s.classList.toggle('active', idx===i); });
+    document.getElementById('n').textContent = i+1;
+  }
+  window.addEventListener('resize', fit);
+  document.addEventListener('keydown', function(e){
+    if(e.key==='ArrowRight' || e.key===' ' || e.key==='PageDown'){ show(i+1); e.preventDefault(); }
+    else if(e.key==='ArrowLeft' || e.key==='PageUp'){ show(i-1); e.preventDefault(); }
+    else if(e.key==='Home'){ show(0); } else if(e.key==='End'){ show(slides.length-1); }
+  });
+  document.addEventListener('click', function(){ show(i+1); });
+  fit(); show(0);
+</script>
+</body>
+</html>
