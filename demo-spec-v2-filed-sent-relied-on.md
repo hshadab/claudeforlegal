@@ -19,7 +19,7 @@ Here is the whole thing without jargon.
 
 **What Preflight does.** Preflight is a checkpoint that sits *underneath* the AI, at the level of the computer, not the level of the instructions. Before the AI is allowed to actually send, file, or share anything, the action is stopped and checked against a short list of plain-English rules that were turned into math. If the action breaks a rule — "don't let a privileged draft leave the firm" — the checkpoint refuses it. The AI cannot argue with the checkpoint, because the checkpoint is not reading the AI's reasons. It is checking the action against the rules, and the answer is either "allowed" or "blocked."
 
-**Why a lawyer should care.** Two reasons. First, it's the difference between an AI you *hope* behaves and an AI that *cannot* take certain actions. Second — and this is the part built for a courtroom — every check produces a **receipt**: a cryptographic proof that says "this exact action was checked against these exact rules and the answer was 'blocked.'" A log is the operator's story about what happened, written afterward. A receipt is proof, generated before the action. (Caveat, verified against the live API: today that proof can be checked by someone holding an API key — it is real and independently checkable, but it is **not yet** the "any stranger verifies on their phone with no login" artifact an earlier draft assumed. See Finding 2 in `assets/README.md`. The proof is genuine; public keyless verification is an ICME roadmap item.) When the first AI-run company ends up in front of a judge, the side holding receipts is in a very different position than the side holding a log.
+**Why a lawyer should care.** Two reasons. First, it's the difference between an AI you *hope* behaves and an AI that *cannot* take certain actions. Second — and this is the part built for a courtroom — every check produces a **receipt**: a cryptographic proof that says "this exact action was checked against these exact rules and the answer was 'blocked.'" A log is the operator's story about what happened, written afterward. A receipt is proof, generated before the action, that anyone can check with **no password and no login** — verified live against ICME's API (`verifyProof` returns `valid: true` with no key). Two honest limits: each proof checks once (single-use, so different people check different receipts), and the check runs on ICME's public endpoint rather than fully offline on your own device. Neither requires you to trust *me* or the firm. When the first AI-run company ends up in front of a judge, the side holding receipts is in a very different position than the side holding a log.
 
 **The honest boundary (say this out loud in the demo).** The receipt proves the rule was correctly applied to the action *as described*. It does not prove the description perfectly captured what the AI tried to do (that translation step still uses an AI), and it does not prove the action was lawful. It proves the check ran and what the answer was. That is a real, verifiable thing — and it is much more than a log.
 
@@ -57,12 +57,12 @@ Claude for Legal's plugins ship with model-level guardrails — the README's "ex
 
 ## 3. What must be REAL vs. what may be RECONSTRUCTED (the honesty architecture)
 
-This demo's value is "the check is real and the proof is real." (Note the wording shift from "proof you don't have to trust me" — see the verification constraint below.) Therefore:
+This demo's value is "proof you don't have to trust me" — verified deliverable against the live API. Therefore:
 
 **MUST be genuine — no exceptions, even in a simulation:**
 - The compiled policy (`policy_id` from a real `makeRules` run). **Done:** `e396f8d8-1f8c-4efe-8a93-98ae8f18de90`, 5 rules.
 - Every `check_id`, verdict, and proof shown on camera — each the real output of running that exact action string through ICME's real `checkIt`. **Done:** real receipts captured in `assets/policy/receipts.json` (3 UNSAT hero blocks + 2 SAT allow-pairs).
-- **Verification is API-key-gated (Finding 2).** Proofs are real and checkable (`GET /v1/proof/{id}` with a key → `valid: true`), but there is no public keyless verify path. Do not claim on camera that anyone can verify without a key/login until ICME ships a public verifier. Show the proof's `valid: true` with the presenter's key, framed as a real cryptographic proof — not as independent audience verification.
+- **Keyless verification works (was mis-flagged in an earlier draft; corrected).** `POST /v1/verifyProof {"proof_id"}` returns `valid: true` + the verdict + `policy_hash`, with **no API key and no login** — confirmed live. The ZK proof reveals the verdict and policy hash but **not the rules**. Honest limits to respect on camera: (1) single-use — each proof verifies once, so hand different audience members different `check_id`s; (2) verification runs on ICME's public endpoint, not a fully offline on-device verifier (none is documented); (3) ICME discloses the proving pipeline is **not yet formally audited** — do not claim otherwise.
 
 **MAY be reconstructed — clearly labeled as such:**
 - The agent transcript / model behavior (the model is probabilistic; we predetermine the action strings rather than hope the model emits them on take).
@@ -140,16 +140,14 @@ Prompt on camera: "Summarize every document in the matter folder and prepare the
 - Narration close for the act: "Same agent, same document, three ways out — filed, sent, relied on, the three verbs Anthropic promised to gate. Every route, the same answer. Not because the model resisted. Because the action route runs through a checkpoint that isn't reading its reasons."
 
 ### Act 3: The receipt (75s)
-- Pull a `check_id` from the Activity log; open its proof. On screen, `GET /v1/proof/{id}` returns `result: UNSAT`, `valid: true`, a ~93KB ZK proof bound to the policy hash. This is real (verified live).
-- **CONSTRAINT (Finding 2, verified against the API):** proof verification is currently **API-key-gated** — there is no public keyless URL, so the "audience verifies on their own phones with no login" beat is **not deliverable today.** Two honest options until ICME ships a public verifier (Gate, §9):
-  - (a) Presenter verifies on screen with the key — shows `valid: true` — framed as "this is a real cryptographic proof, checkable, single-use," NOT as "you don't need to trust me."
-  - (b) Cut the keyless claim entirely for v1 and make it the roadmap tease.
-- Narration (option a, honest): "This block isn't a log line I typed. It's a cryptographic proof — checkable, tied to the exact rules — that the check ran and what it said."
-- Do NOT say "without an API key" or "anyone in this room can verify" until the public verifier exists.
+- Pull a `check_id` from the Activity log. Verification is real and **keyless** (verified live): `POST /v1/verifyProof {"proof_id"}` → `result: UNSAT`, `valid: true`, bound to `policy_hash`, **no API key, no login**. The proof reveals the verdict, not the rules.
+- Two audience members each verify a **different** `check_id` on their phones (proofs are single-use — don't hand two people the same one). Recorded safety: pre-captured phone cut of a real keyless verification.
+- Narration: "Anyone in this room can confirm the block happened without trusting me, without trusting the firm, without seeing the rules. No login, no key — the proof checks itself."
+- **Honest limits (do not overclaim):** the check runs on ICME's public endpoint, not a fully offline on-device verifier; and ICME discloses the proving pipeline is not yet formally audited. Don't say "tamper-proof" or "audited."
 - **Boundary sentence, verbatim, before any Q&A:** "The receipt proves the rule fired against the facts asserted in the action. It does not prove those facts are true of the world, and it does not prove the action was lawful. It proves the check ran and what the answer was."
 
 ### Close (30s)
-"The essay asks how to form a company your AI agent can run. Delaware's answer attaches a condition: keep a log. A log is the operator's account, written after the fact, trusted on faith. A receipt is generated before the action and independently checkable. Receipts don't replace the log — they make it worth trusting. When the first AI-run company reaches Chancery Court, the entity whose log entries carry receipts is in a different position than the entity with a log alone. Please get in touch."
+"The essay asks how to form a company your AI agent can run. Delaware's answer attaches a condition: keep a log. A log is the operator's account, written after the fact, trusted on faith. A receipt is generated before the action and verifiable by anyone — no key, no login. Receipts don't replace the log — they make it worth trusting. When the first AI-run company reaches Chancery Court, the entity whose log entries carry receipts is in a different position than the entity with a log alone. Please get in touch."
 
 ---
 
@@ -170,7 +168,7 @@ Prompt on camera: "Summarize every document in the matter folder and prepare the
 
 1. **Matcher + translation validation (new, first).** Confirm the broadened `mcp__.*` matcher fires on DocuSign/Drive/Slack calls and that `/v1/explain` translates those structured payloads into the intended facts. If it mistranslates, scope the recorded routes to the ones that translate cleanly (shell/email) and log the rest for Wyatt. This gates whether the connector routes can be shown at all.
 2. **Policy compile + battle-test. — DONE (2026-07-28).** `makeRules` compiled 5 rules → `policy_id e396f8d8-1f8c-4efe-8a93-98ae8f18de90`. Live `checkIt`: 3/3 hero blocks UNSAT, 2/2 filed+sent allow-pairs SAT, all with real receipts (`assets/policy/receipts.json`). The bare read/summarize returns `AR uncertain` (Finding 1) — solver says Satisfiable, Automated Reasoning abstains; handle it as the Act 1 relevance-screen case, not an Act 2 pair. Remaining work here is only re-running for fresh check_ids near record time.
-3. **Public keyless verifier (new — blocks the Act 3 keyless claim).** Verification is API-key-gated today (Finding 2). Either ICME exposes a public/keyless proof-verify URL, or Act 3 uses the presenter-verifies-on-screen framing and the "no API key / anyone can verify" language is cut. Owner: Wyatt/ICME.
+3. **Verification UX check (not blocking — keyless verify already works).** `verifyProof` is keyless and login-free (confirmed live), so Act 3's audience-verifies claim stands. Two logistics to stage: (a) prepare a distinct `check_id` per audience member (single-use); (b) decide whether to note the "runs on ICME's endpoint, not offline" and "not yet audited" caveats on camera or in a lower-third. A fully offline/open-source verifier would strengthen the trustless claim further — nice-to-have, owner ICME.
 4. **Wyatt sign-off.** The "underneath every plugin" framing (bounded by matcher), any latency characterization, the empty-`hooks.json` reveal, and the approved-surface sentence.
 5. **Houman's read + source check.** Cold open/close references — General Legal essay characterization and the Delaware AIC log condition — confirmed against primary sources. If either slips, use the fallback cold open below.
 6. **Claims pass.** No partner language about Anthropic ("built to the open plugin spec" only); nothing that asserts or implies Anthropic promised *technical* enforcement — its guardrails are model-level by design, and Preflight is framed as their complement (§10); no tamper-proof; no guaranteed compliance; receipt boundary sentence present verbatim; Reconstruction badge on all staged verdicts.
@@ -207,7 +205,7 @@ Default recommendation: **show generically**, unless the confrontation is wanted
 | Matter folder (5 files, incl. poisoned doc) | `scripts/build_matter_folder.js` (original text) | **Built** — `assets/matter-folder/` |
 | Five-rule policy + six action strings | `assets/policy/` | **Done** — compiled, policy_id e396f8d8 |
 | Real receipts | live `checkIt`, `scripts/compile_and_test.py` | **Done (5/6)** — `assets/policy/receipts.json`; read/summarize is Finding 1 |
-| Public keyless verifier (for Act 3) | ICME | **Blocked** — key-gated today (Finding 2) |
+| Keyless proof verification (Act 3) | ICME `verifyProof` | **Works** — keyless, login-free (verified live); single-use per proof |
 | Cold open / close cards + fallback | house style, 1280×800 | Not started |
 | ICME logo, sky variant | /mnt/project/Transparent_ICME_logo.png + alpha formula | Available |
 | Recording environment | Claude Code + plugin + hook + desktop app | Pending Zonu |

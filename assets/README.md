@@ -59,15 +59,27 @@ permitted by the **free relevance screen** (it touches no rule variable) and nev
 paid check — which is the Act 1 mechanism, not an Act 2 block/allow pair. The two pairs the
 demo actually needs (filed, sent) resolve cleanly.
 
-**Finding 2 — proof verification is API-key-gated; there is no public keyless verify.**
-The proofs are real (e.g. `GET /v1/proof/{id}` with a key returns `result: UNSAT`,
-`valid: true`, a ~93KB ZK proof bound to `policy_hash`). But **every proof endpoint requires
-`X-API-Key`**, and the docs state there is no unauthenticated browser/phone verification URL.
-`verifyProof` is key-gated and single-use (409 after first verify). **Act 3's "anyone verifies
-on their phone, no API key, no login" is NOT deliverable on the current API.** Either reframe
-Act 3 (presenter shows `valid: true` on screen using the key — honest, but it is not
-independent verification), or treat "expose a public keyless verifier" as an ICME roadmap
-gate before the keyless claim can be made on camera.
+**Finding 2 — keyless verification WORKS (an earlier draft of this file said otherwise; corrected).**
+`POST /v1/verifyProof {"proof_id": "..."}` with **no API key and no login** returns the verdict
+and `valid: true`, bound to `policy_hash` — confirmed live:
+
+```
+POST https://api.icme.io/v1/verifyProof   (no X-API-Key)
+{"proof_id":"0d6351b5-..."} → {"result":"UNSAT","valid":true,"policy_hash":"81d39e...","used":true}
+```
+
+The ZK proof reveals the verdict + policy hash but **not the rules**. So Act 3's "anyone verifies
+without trusting me, without seeing the rules" is deliverable. Honest limits:
+- **Single-use.** Each proof verifies once; a second call returns `proof used`. `GET /v1/proof/{id}/download`
+  also consumes the proof. Give different audience members different `check_id`s.
+- **Runs on ICME's endpoint,** not a fully offline on-device verifier — none is documented (JOLT is
+  open-source in principle, but there's no published self-serve offline path). "Don't trust me / the
+  firm" holds; "don't trust ICME's server either" is not yet a user flow.
+- **Not yet audited.** ICME discloses the proving pipeline has not completed a formal security audit.
+
+Note: during this validation, two hero-block proofs were consumed (filed-unsat `11d644dc` via a
+`/download` test, sent-unsat `0d6351b5` via the keyless verify above). Their check strings and verdicts
+are unchanged and reproducible; regenerate fresh proofs at record time (the spec already requires this).
 
 ## Security note
 
