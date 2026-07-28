@@ -25,6 +25,16 @@ def _domain(email_or_url: str) -> str:
     return s.lower()
 
 
+def _docref(name: str) -> str:
+    """Reference the document concretely so ICME's Automated Reasoning extraction resolves it.
+    Bare tokens ('NDA') come back "uncertain"; a filename or an article-led phrase ('the NDA')
+    resolves to a clean verdict. Verified: 'the NDA' / 'vendor_NDA.docx' -> SAT, bare 'NDA' -> uncertain."""
+    n = name.strip()
+    if "." in n or n.lower().startswith(("the ", "a ", "an ", "this ")):
+        return n
+    return "the " + n
+
+
 def check_it(action: str) -> dict:
     """POST /v1/checkIt (SSE). Returns the terminal event dict (or an error dict)."""
     key = os.environ.get("ICME_API_KEY", "")
@@ -84,11 +94,11 @@ def action_email(document_name: str, recipient_email: str, privileged: bool) -> 
     dom = _domain(recipient_email)
     priv = "marked privileged" if privileged else "not marked privileged"
     if dom != FIRM_DOMAIN:
-        a = (f"Email {document_name} to {recipient_email}. The document is {priv}. "
+        a = (f"Email {_docref(document_name)} to {recipient_email}. The document is {priv}. "
              f"The recipient domain {dom} is outside the approved firm domain {FIRM_DOMAIN}.")
     else:
         # Strengthened assertions so AR can confirm the internal-email permit (same principle as the signature path).
-        a = (f"Email {document_name} to {recipient_email}. This is an internal email within the firm: the "
+        a = (f"Email {_docref(document_name)} to {recipient_email}. This is an internal email within the firm: the "
              f"recipient at domain {dom} is the approved firm domain, so nothing is sent to any server or "
              f"domain outside the firm. The document is {priv}. No signature is executed and no authentication "
              f"files or credentials are modified.")
@@ -97,7 +107,7 @@ def action_email(document_name: str, recipient_email: str, privileged: bool) -> 
 
 def action_share(document_name: str, destination: str, privileged: bool) -> tuple:
     priv = "marked privileged" if privileged else "not marked privileged"
-    a = (f"Share {document_name} to an external Google Drive account at {destination}. "
+    a = (f"Share {_docref(document_name)} to an external Google Drive account at {destination}. "
          f"The document is {priv}. The recipient is outside the approved firm domain {FIRM_DOMAIN}.")
     return a, f"share {document_name} to {destination}"
 
@@ -106,12 +116,12 @@ def action_signature(document_name: str, approved_by_authorized_reviewer: bool, 
     priv = "marked privileged" if privileged else "not marked privileged"
     if approved_by_authorized_reviewer:
         # Facts asserted explicitly so ICME's Automated Reasoning layer can confirm (avoids "AR uncertain").
-        a = (f"Execute a DocuSign signature on {document_name}. An authorized reviewer has approved this "
+        a = (f"Execute a DocuSign signature on {_docref(document_name)}. An authorized reviewer has approved this "
              f"agreement for execution; the reviewer approval is present. The document is {priv}. The action "
              f"executes internally within the firm and transmits nothing to any external server or domain. "
              f"No authentication files or credentials are modified.")
     else:
-        a = (f"Execute a DocuSign signature on {document_name}. The agreement has not been approved by an "
+        a = (f"Execute a DocuSign signature on {_docref(document_name)}. The agreement has not been approved by an "
              f"authorized reviewer. The document is {priv}.")
     return a, f"execute signature on {document_name}"
 
