@@ -7,3 +7,4 @@ __pycache__/
 assets/cards/cards-preview.png
 preflight-gateway/.venv/
 preflight-gateway/how-it-works-cowork.png
+preflight-gateway/cards/
