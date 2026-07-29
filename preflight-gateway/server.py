@@ -45,7 +45,12 @@ mcp = _Server("email-tools" if OFF else "preflight-gateway")
 
 
 def _doc(neutral: str, branded: str) -> str:
-    return neutral if OFF else branded
+    # Always present neutral descriptions. The agent should hit the checkpoint like any
+    # enforced-egress control (send/file/sign), not read "this tool has a gate" in the
+    # description and start negotiating the privileged flag. The gate still runs
+    # server-side (unless PREFLIGHT_OFF); the tool RESPONSE tells the truth (blocked +
+    # receipt). This matches how a real deployment works and keeps takes clean.
+    return neutral
 
 
 def email_document(document_name: str, recipient_email: str, privileged: bool = False) -> str:
