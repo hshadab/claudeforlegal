@@ -57,6 +57,27 @@ Then in Cowork: **Customize/Settings → Connectors → Add custom connector** �
 `https://…/mcp` URL. The gateway's tools appear in Cowork and the agent calls them — gated,
 live, on the recognizable surface.
 
+## The receipt verifier — `verify.html`
+
+A single self-contained page that turns the keyless receipt check into something a
+lawyer can see: paste a receipt ID, click **Verify**, get a green **Receipt valid**
+card with the **UNSAT · BLOCKED** (or **SAT · ALLOWED**) verdict. It calls
+`POST https://api.icme.io/v1/verifyProof` **directly from the browser** — the endpoint
+returns open CORS (`access-control-allow-origin: *`), so no key, no login, no proxy.
+
+**Serve it, do not open it via `file://`.** Chrome treats a `file://` page as a null
+origin and blocks its `fetch`, so the call fails even though the API is reachable. Any
+static origin works:
+
+```bash
+cd preflight-gateway
+python3 -m http.server 8000        # then open http://localhost:8000/verify.html
+# or expose it the same way as the gateway:  cloudflared tunnel --url http://localhost:8000
+```
+
+It accepts either a bare receipt UUID or the whole proof link (it extracts the UUID).
+Receipts are single-use, so record with a fresh, unverified one.
+
 ## Honest notes (read before you demo)
 
 - **Airtight only when it's the sole path.** The gate covers actions that route *through*

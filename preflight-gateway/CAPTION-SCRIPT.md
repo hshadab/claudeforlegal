@@ -68,14 +68,20 @@ Footage: a fresh chat. The approved-NDA-to-signature exchange, landing on SAT.
   > It stops mistakes, not work.
 
 ## 1:35 · Beat 4 · The receipt  (~30s)
-Footage: the terminal. Run the verifyProof curl, land on the JSON result.
+Two ways to shoot this. Pick one.
+- **Option A, the web page (recommended for a GC audience).** Open `verify.html`,
+  paste the receipt ID off the blocked action, click Verify, land on the green
+  **Receipt valid** card with the **UNSAT · BLOCKED** chip. Reads the way a lawyer
+  would actually check it. (Serve it, do not open via `file://` — see README.)
+- **Option B, the terminal (for a technical audience).** Run the verifyProof curl,
+  land on the JSON result. More credible to engineers, plainer to a GC.
 
 - **[CARD, hold 3s]**
   > Every check leaves a receipt.
-- **[CALLOUT on the command]**
-  > POST /v1/verifyProof   ·   no key, no login
-- **[CALLOUT big, on the response, hold 4s]**
-  > valid: true
+- **[CALLOUT on the command / the input box]**
+  > verifyProof   ·   no key, no login
+- **[CALLOUT big, on the result, hold 4s]**
+  > Receipt valid   ·   valid: true
 - **[CARD, hold 5s]**
   > Anyone can verify it in under a second. It proves the check ran.
   > It never reveals your rules.
