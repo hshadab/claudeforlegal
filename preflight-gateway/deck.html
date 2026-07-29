@@ -102,10 +102,6 @@
     #stage{position:relative}
     .slide{display:none;box-shadow:0 26px 70px rgba(20,40,90,.28);border-radius:10px}
     .slide.active{display:flex}
-    #hud{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);
-      font:500 13px/1 'JetBrains Mono',monospace;color:var(--muted);letter-spacing:.1em;
-      background:rgba(255,255,255,.8);border:1px solid var(--line);padding:8px 14px;border-radius:20px;user-select:none}
-    #hud b{color:var(--accent)}
   }
   @page{ size:1280px 720px; margin:0 }
   @media print{
@@ -280,12 +276,9 @@
 
   </div>
 
-  <div id="hud"><b id="n">1</b> / <span id="t">6</span> &nbsp;·&nbsp; Ctrl/Cmd+P to save as PDF</div>
-
 <script>
   var slides = Array.prototype.slice.call(document.querySelectorAll('.slide'));
   var i = 0;
-  document.getElementById('t').textContent = slides.length;
   function fit(){
     var s = Math.min(window.innerWidth/1280, window.innerHeight/720) * 0.94;
     var st = document.getElementById('stage');
@@ -295,7 +288,6 @@
   function show(k){
     i = (k + slides.length) % slides.length;
     slides.forEach(function(s,idx){ s.classList.toggle('active', idx===i); });
-    document.getElementById('n').textContent = i+1;
   }
   window.addEventListener('resize', fit);
   document.addEventListener('keydown', function(e){
