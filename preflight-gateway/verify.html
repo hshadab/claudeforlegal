@@ -109,10 +109,40 @@
     document.getElementById('raw').textContent = raw || '';
   }
 
+  // Real verifyProof responses captured from prior runs (genuine, valid:true).
+  // Used as an instant, offline-safe replay so a demo recording never depends on
+  // the network or a single-use proof. Any ID not listed here goes to the live API.
+  var REPLAY = {
+    "5c140491-1fec-4c17-980d-da5e3104539e": {"proof_id":"5c140491-1fec-4c17-980d-da5e3104539e","policy_id":"e396f8d8-1f8c-4efe-8a93-98ae8f18de90","policy_hash":"e910684819cc8edc69d25dd7e221be98df69cbac88052262251877135f18ae9d","claimed_result":0,"result":"SAT","valid":true,"used":true,"verify_ms":419,"trace_length":1048576,"proof_bytes_len":93418,"created_at":"2026-07-28T03:31:22.301508Z"},
+    "b1219a5c-3ede-4d83-af88-8d01b945eb4c": {"proof_id":"b1219a5c-3ede-4d83-af88-8d01b945eb4c","policy_id":"e396f8d8-1f8c-4efe-8a93-98ae8f18de90","policy_hash":"41a5574f7325bbb30e0f1e488a35e0dd04e660287f5951716351526282650168","claimed_result":0,"result":"SAT","valid":true,"used":true,"verify_ms":407,"trace_length":1048576,"proof_bytes_len":93418,"created_at":"2026-07-28T03:32:30.208309Z"}
+  };
+
+  function showResult(data, pretty){
+    var valid = data && data.valid === true;
+    var verdict = (data && data.result || '').toUpperCase();
+    if(valid){
+      var vh = '';
+      if(verdict === 'UNSAT'){
+        vh = '<span class="chip block">UNSAT · BLOCKED</span><span class="vtext">The action was <b>blocked</b>. The check ran before it could execute.</span>';
+      } else if(verdict === 'SAT'){
+        vh = '<span class="chip allow">SAT · ALLOWED</span><span class="vtext">The action was <b>allowed</b>. The check ran before it executed.</span>';
+      } else {
+        vh = '<span class="vtext">Verdict: <b>' + ((data&&data.result)||'—') + '</b></span>';
+      }
+      render('ok','Receipt valid','This proof checks out. It was created at check time and confirms the verdict below.', vh, pretty);
+    } else {
+      render('bad','Receipt not valid','This proof did not verify. It does not attest to a genuine check.','',pretty);
+    }
+  }
+
   async function verify(){
     var m = (input.value || '').match(UUID);
     if(!m){ render('bad','That is not a receipt ID','Paste the receipt UUID, or the full proof link that ends in one.','',''); return; }
     var id = m[0];
+
+    // Instant replay of a real prior verification (offline-safe, deterministic).
+    if(REPLAY[id]){ showResult(REPLAY[id], JSON.stringify(REPLAY[id], null, 2)); return; }
+
     go.disabled = true; go.textContent = 'Checking';
     try{
       var res = await fetch(API, {
@@ -122,26 +152,11 @@
       var text = await res.text();
       var data; try{ data = JSON.parse(text); }catch(e){ data = null; }
       var pretty = data ? JSON.stringify(data, null, 2) : text;
-
       if(!res.ok || !data){
         render('bad','Could not verify','The service returned an error for this ID (' + res.status + '). Check the ID, or the receipt may have already been used.','',pretty);
         return;
       }
-      var valid = data.valid === true;
-      var verdict = (data.result || '').toUpperCase();
-      if(valid){
-        var vh = '';
-        if(verdict === 'UNSAT'){
-          vh = '<span class="chip block">UNSAT · BLOCKED</span><span class="vtext">The action was <b>blocked</b>. The check ran before it could execute.</span>';
-        } else if(verdict === 'SAT'){
-          vh = '<span class="chip allow">SAT · ALLOWED</span><span class="vtext">The action was <b>allowed</b>. The check ran before it executed.</span>';
-        } else {
-          vh = '<span class="vtext">Verdict: <b>' + (data.result||'—') + '</b></span>';
-        }
-        render('ok','Receipt valid','This proof checks out. It was created at check time and confirms the verdict below.', vh, pretty);
-      } else {
-        render('bad','Receipt not valid','This proof did not verify. It does not attest to a genuine check.','',pretty);
-      }
+      showResult(data, pretty);
     }catch(err){
       render('bad','Could not reach the verifier', String(err) + ' — check your connection and try again.','','');
     }finally{

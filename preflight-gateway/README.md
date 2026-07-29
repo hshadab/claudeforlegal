@@ -65,18 +65,37 @@ card with the **UNSAT · BLOCKED** (or **SAT · ALLOWED**) verdict. It calls
 `POST https://api.icme.io/v1/verifyProof` **directly from the browser** — the endpoint
 returns open CORS (`access-control-allow-origin: *`), so no key, no login, no proxy.
 
-**Serve it, do not open it via `file://`.** Chrome treats a `file://` page as a null
-origin and blocks its `fetch`, so the call fails even though the API is reachable. Any
-static origin works:
+It accepts either a bare receipt UUID or the whole proof link (it extracts the UUID).
+
+### Two ways it resolves a receipt
+
+1. **Instant replay of a real prior verification (default for the demo IDs).** The page
+   embeds genuine `verifyProof` responses captured from earlier runs (`REPLAY` in the
+   script — real `valid:true` results, the actual JSON). Paste one of those receipt IDs
+   and it renders the real green card instantly, with **no network call**. This is the
+   bulletproof path for recording: no single-use risk, no `file://` issue, works offline,
+   and the data on screen is real, not fabricated.
+2. **Live call for any other ID.** Anything not in `REPLAY` is POSTed to the real
+   `verifyProof` in the browser. For a live call, **serve the page, do not open it via
+   `file://`** — Chrome blocks `fetch` from a `file://` null origin. Any static origin works:
+
+   ```bash
+   cd preflight-gateway
+   python3 -m http.server 8000     # then open http://localhost:8000/verify.html
+   # or expose it like the gateway:  cloudflared tunnel --url http://localhost:8000
+   ```
+
+The two IDs currently embedded are real **SAT (permitted)** receipts. To bake in a real
+**UNSAT (blocked)** one for the hero moment, run this with a funded key and paste the
+printed JSON back so it can be added to `REPLAY`:
 
 ```bash
-cd preflight-gateway
-python3 -m http.server 8000        # then open http://localhost:8000/verify.html
-# or expose it the same way as the gateway:  cloudflared tunnel --url http://localhost:8000
+export ICME_API_KEY=sk-smt-...
+PID=$(python3 gate.py email vendor_MSA_draft.docx intake@legal-review-portal.net --privileged \
+      | grep -oE '[0-9a-f-]{36}' | tail -1)      # proof_id from the block
+curl -s -X POST https://api.icme.io/v1/verifyProof -H 'Content-Type: application/json' \
+     -d "{\"proof_id\":\"$PID\"}"                 # → real UNSAT valid:true JSON
 ```
-
-It accepts either a bare receipt UUID or the whole proof link (it extracts the UUID).
-Receipts are single-use, so record with a fresh, unverified one.
 
 ## Honest notes (read before you demo)
 
