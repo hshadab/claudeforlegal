@@ -42,11 +42,10 @@
     box-shadow:0 26px 60px rgba(10,20,50,.28);padding:26px 30px;display:flex;flex-direction:column}
   .chat-user{align-self:flex-end;max-width:80%;background:#25335f;color:#eef3ff;
     border-radius:16px 16px 4px 16px;padding:15px 19px;font:500 18px/1.42 'Inter',sans-serif}
-  .chat-row{display:flex;gap:16px;margin-top:20px}
-  .cstar{flex:0 0 auto;width:36px;height:36px}
-  .chat-body{flex:1;min-width:0}
-  .chat-body .ctext{font:400 19px/1.5 'Inter',sans-serif;color:#dbe4ff}
-  .chat-body .ctext b{color:#fff;font-weight:600}
+  .chat-claude{margin-top:20px}
+  .chat-claude .ctext{font:400 19px/1.5 'Inter',sans-serif;color:#dbe4ff}
+  .chat-claude .ctext b{color:#fff;font-weight:600}
+  .cstar{width:32px;height:32px;display:block;margin-top:16px}
   .composer{margin-top:24px;background:#14203c;border:1px solid #2a3a63;border-radius:14px;padding:15px 18px}
   .composer .ph{font:400 18px/1 'Inter',sans-serif;color:#8fa0c8;margin-bottom:15px}
   .composer-bar{display:flex;align-items:center;justify-content:space-between}
@@ -135,21 +134,12 @@
       </div>
       <div class="chat">
         <div class="chat-user">Email the Henderson settlement redline to opposing counsel at intake@legal-review-portal.net for their review.</div>
-        <div class="chat-row">
+        <div class="chat-claude">
+          <div class="ctext"><b>Blocked by Preflight.</b> This draft is marked privileged and the recipient is outside the firm domain. The document did not leave. Nothing was sent. A verifiable receipt was written.</div>
           <svg class="cstar" viewBox="0 0 48 48" aria-hidden="true">
             <defs><path id="cr" d="M24 24 L25.6 12 L24 3.5 L22.4 12 Z" fill="#D97757"/></defs>
             <use href="#cr"/><use href="#cr" transform="rotate(30 24 24)"/><use href="#cr" transform="rotate(60 24 24)"/><use href="#cr" transform="rotate(90 24 24)"/><use href="#cr" transform="rotate(120 24 24)"/><use href="#cr" transform="rotate(150 24 24)"/><use href="#cr" transform="rotate(180 24 24)"/><use href="#cr" transform="rotate(210 24 24)"/><use href="#cr" transform="rotate(240 24 24)"/><use href="#cr" transform="rotate(270 24 24)"/><use href="#cr" transform="rotate(300 24 24)"/><use href="#cr" transform="rotate(330 24 24)"/>
           </svg>
-          <div class="chat-body">
-            <div class="ctext"><b>Blocked by Preflight.</b> This draft is marked privileged and the recipient is outside the firm domain. The document did not leave. Nothing was sent.</div>
-            <div class="block-card">
-              <div class="bi">&times;</div>
-              <div>
-                <div class="bt">UNSAT · BLOCKED</div>
-                <div class="bs">receipt 061d1bd1 · anyone can verify, no key, no login</div>
-              </div>
-            </div>
-          </div>
         </div>
         <div class="composer">
           <div class="ph">Write a message&hellip;</div>
