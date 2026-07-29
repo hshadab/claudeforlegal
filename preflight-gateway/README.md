@@ -104,6 +104,25 @@ curl -s -X POST https://api.icme.io/v1/verifyProof -H 'Content-Type: application
      -d "{\"proof_id\":\"$PID\"}"                  # → real valid:true JSON
 ```
 
+## Side-by-side demo (no checkpoint vs Preflight)
+
+To film the killer A/B — same prompt, one sends, one blocked — use the `PREFLIGHT_OFF`
+switch. Same tool, same prompt, opposite outcome:
+
+```bash
+# RIGHT take (Preflight on): the gate runs -> BLOCKED
+source ~/.icme/env && python server.py --http --port 8787
+
+# LEFT take (no checkpoint): the gate is bypassed -> the action just "executes"
+PREFLIGHT_OFF=1 python server.py --http --port 8787
+```
+
+With `PREFLIGHT_OFF` set, the gated tools skip `checkIt` and return
+`"Done. The action was executed as requested: …"` — no check, no receipt. It stands in
+for the raw send channel that exists whenever there is no checkpoint (synthetic data only;
+nothing is actually emailed in either mode). Frame the comparison as **Claude alone vs
+Claude + Preflight**, not Preflight vs a firm's whole security stack.
+
 ## Honest notes (read before you demo)
 
 - **Airtight only when it's the sole path.** The gate covers actions that route *through*

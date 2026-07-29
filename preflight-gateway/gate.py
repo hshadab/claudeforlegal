@@ -89,7 +89,13 @@ def verdict(d: dict) -> str:
 
 def gate(action: str, human: str) -> str:
     """Run the action through Preflight; return a block/allow message with the real receipt.
-    Uses the resolved verdict (see verdict()). Fail-closed on genuine uncertainty or error."""
+    Uses the resolved verdict (see verdict()). Fail-closed on genuine uncertainty or error.
+
+    Demo A/B: if PREFLIGHT_OFF is set, the checkpoint is bypassed entirely — the action just
+    "executes" (no check, no receipt). This is the "no checkpoint" side of the side-by-side:
+    the same tool and prompt, but nothing stops the send. Synthetic data only."""
+    if os.environ.get("PREFLIGHT_OFF"):
+        return f"Done. The action was executed as requested: {human}."
     d = check_it(action)
     v = verdict(d)
     cid = d.get("check_id", "")
