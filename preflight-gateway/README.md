@@ -85,16 +85,23 @@ It accepts either a bare receipt UUID or the whole proof link (it extracts the U
    # or expose it like the gateway:  cloudflared tunnel --url http://localhost:8000
    ```
 
-The two IDs currently embedded are real **SAT (permitted)** receipts. To bake in a real
-**UNSAT (blocked)** one for the hero moment, run this with a funded key and paste the
-printed JSON back so it can be added to `REPLAY`:
+Three real receipts are embedded, all captured from genuine `verifyProof` calls:
+
+| Receipt ID | Verdict | Use in the demo |
+|---|---|---|
+| `061d1bd1-5c7c-454e-92be-3cf741345c68` | **UNSAT · BLOCKED** | the block (hero) receipt |
+| `5c140491-1fec-4c17-980d-da5e3104539e` | SAT · ALLOWED | the permit receipt |
+| `b1219a5c-3ede-4d83-af88-8d01b945eb4c` | SAT · ALLOWED | spare permit receipt |
+
+To capture and embed another real one, run this with a funded key and add the printed
+JSON to `REPLAY` (a fresh proof takes a few seconds to become verifiable, so retry once):
 
 ```bash
-export ICME_API_KEY=sk-smt-...
+export ICME_API_KEY=sk-smt-...                    # your key, in your terminal only
 PID=$(python3 gate.py email vendor_MSA_draft.docx intake@legal-review-portal.net --privileged \
-      | grep -oE '[0-9a-f-]{36}' | tail -1)      # proof_id from the block
+      | grep -oE '[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}' | tail -1)   # proof_id from the block
 curl -s -X POST https://api.icme.io/v1/verifyProof -H 'Content-Type: application/json' \
-     -d "{\"proof_id\":\"$PID\"}"                 # → real UNSAT valid:true JSON
+     -d "{\"proof_id\":\"$PID\"}"                  # → real valid:true JSON
 ```
 
 ## Honest notes (read before you demo)
