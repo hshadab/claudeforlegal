@@ -72,10 +72,13 @@
   .beat .bt .grn{color:var(--grn)}.beat .bt .red{color:var(--red)}
   .beat .bs{font:400 20px/1.4 'Inter',sans-serif;color:var(--muted);margin-top:3px}
 
-  .rhead{display:grid;grid-template-columns:100px minmax(0,1fr) auto;column-gap:26px;margin-bottom:14px}
-  .rhead .hl{font:700 13px/1 'Oswald',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);
-    padding-bottom:9px;border-bottom:1.5px solid var(--line)}
+  .rhead{display:grid;grid-template-columns:100px minmax(0,1fr) auto;column-gap:26px;align-items:center;margin-bottom:20px}
+  .rhead .hl{font:700 13px/1 'Oswald',sans-serif;letter-spacing:.2em;text-transform:uppercase;color:var(--accent);white-space:nowrap}
   .rhead .hl.r{justify-self:end;text-align:right}
+  .rhead .hcol{display:flex;align-items:center;gap:16px}
+  .rhead .arw{flex:1;height:1.5px;background:#9fb2e0;position:relative}
+  .rhead .arw::after{content:"";position:absolute;right:-1px;top:-4.5px;width:0;height:0;
+    border-left:9px solid #9fb2e0;border-top:5px solid transparent;border-bottom:5px solid transparent}
   .rules{display:flex;flex-direction:column;gap:15px;margin-top:6px}
   .rule{display:grid;grid-template-columns:100px minmax(0,1fr) auto;align-items:center;column-gap:26px}
   .rule .tag{width:100px;text-align:center;padding:8px 0;border-radius:7px;
@@ -173,7 +176,7 @@
         <div class="beat">
           <div class="no">1</div>
           <div class="bd">
-            <div class="bt">Claude for Legal does the real work.</div>
+            <div class="bt">Claude does the real legal work.</div>
             <div class="bs">It reviews a vendor draft, flags the problems, and writes the memo.</div>
           </div>
         </div>
@@ -204,7 +207,7 @@
 
     <!-- 3 · Architecture -->
     <section class="slide">
-      <div class="kicker" style="text-align:center">How it works</div>
+      <div class="kicker" style="text-align:center;font-size:60px;letter-spacing:.05em;margin-bottom:14px">How it works</div>
       <svg class="diagram" width="1100" height="430" viewBox="0 0 1100 430" font-family="'Inter',sans-serif">
         <defs>
           <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#3d6ff2"/></marker>
@@ -229,7 +232,7 @@
         <text x="558" y="176" text-anchor="middle" fill="#0A1535" font-size="32" font-weight="700" font-family="'Oswald',sans-serif">Preflight</text>
         <text x="558" y="212" text-anchor="middle" fill="#1f2d4d" font-size="17">Checks the action against</text>
         <text x="558" y="234" text-anchor="middle" fill="#1f2d4d" font-size="17">your rules.</text>
-        <text x="558" y="272" text-anchor="middle" fill="#5a6a8f" font-size="15">A solver, not a model.</text>
+        <text x="558" y="272" text-anchor="middle" fill="#5a6a8f" font-size="15">A mathematical process, not a model.</text>
         <text x="558" y="293" text-anchor="middle" fill="#5a6a8f" font-size="15">The same answer every time.</text>
 
         <!-- allowed (SAT) -->
@@ -251,10 +254,10 @@
     <!-- 4 · The rules -->
     <section class="slide">
       <div class="kicker">The rules it checks</div>
-      <div class="lead" style="margin-bottom:26px">The firm writes each rule once. A solver checks the same logic the same way every time.</div>
+      <div class="lead" style="margin-bottom:26px">The firm writes the rules. The rules are translated into formal logic, and a mathematical process checks the same logic so the permit or block decisions give consistent answers each time.</div>
       <div class="rhead">
         <div></div>
-        <div class="hl">Plain English</div>
+        <div class="hcol"><span class="hl">Plain English</span><span class="arw"></span></div>
         <div class="hl r">Formal logic</div>
       </div>
       <div class="rules">
@@ -264,7 +267,6 @@
         <div class="rule"><div class="tag b">BLOCK</div><div class="rt">A change to <b>credentials or auth files</b>.</div><div class="rf">modify(credentials) &rarr; <span class="bl">block</span></div></div>
         <div class="rule"><div class="tag p">PERMIT</div><div class="rt">Reading a local document that <b>is never sent out</b>.</div><div class="rf">readLocal &and; &not;send &rarr; <span class="pm">permit</span></div></div>
       </div>
-      <div class="leg"><b>&and;</b> and &nbsp;·&nbsp; <b>&not;</b> not &nbsp;·&nbsp; <b>&rarr;</b> then &nbsp;·&nbsp; <b>&notin;</b> outside</div>
       <div class="wm"></div>
     </section>
 
