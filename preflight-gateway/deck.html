@@ -35,17 +35,28 @@
   /* Cover slide: title lockup band + dark chat card showing a real block */
   .slide.cover{padding:52px 80px 64px;justify-content:center;align-items:center}
   .cover-head{text-align:center;margin-bottom:30px}
-  .cover-head .kicker{font:600 30px/1.1 'Oswald',sans-serif;text-transform:none;letter-spacing:-.01em;color:var(--accent);margin-bottom:8px}
-  .cover-head h1{font:600 44px/1.08 'Oswald',sans-serif;color:var(--ink);letter-spacing:-.01em}
+  .cover-head .kicker{font:600 42px/1.08 'Oswald',sans-serif;text-transform:none;letter-spacing:-.01em;color:var(--accent);margin-bottom:6px}
+  .cover-head h1{font:600 42px/1.08 'Oswald',sans-serif;color:var(--ink);letter-spacing:-.01em}
   .cover-head h1 .em{color:var(--accent)}
   .chat{width:912px;background:#0b1530;border:1px solid #22315c;border-radius:18px;
     box-shadow:0 26px 60px rgba(10,20,50,.28);padding:26px 30px;display:flex;flex-direction:column}
   .chat-user{align-self:flex-end;max-width:80%;background:#25335f;color:#eef3ff;
     border-radius:16px 16px 4px 16px;padding:15px 19px;font:500 18px/1.42 'Inter',sans-serif}
-  .chat-claude{margin-top:22px}
-  .chat-claude .who{font:700 13px/1 'Oswald',sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7ea2ff;margin-bottom:9px}
-  .chat-claude .ctext{font:400 19px/1.5 'Inter',sans-serif;color:#dbe4ff}
-  .chat-claude .ctext b{color:#fff;font-weight:600}
+  .chat-row{display:flex;gap:16px;margin-top:20px}
+  .cstar{flex:0 0 auto;width:36px;height:36px}
+  .chat-body{flex:1;min-width:0}
+  .chat-body .ctext{font:400 19px/1.5 'Inter',sans-serif;color:#dbe4ff}
+  .chat-body .ctext b{color:#fff;font-weight:600}
+  .composer{margin-top:24px;background:#14203c;border:1px solid #2a3a63;border-radius:14px;padding:15px 18px}
+  .composer .ph{font:400 18px/1 'Inter',sans-serif;color:#8fa0c8;margin-bottom:15px}
+  .composer-bar{display:flex;align-items:center;justify-content:space-between}
+  .cb-left,.cb-right{display:flex;align-items:center;gap:15px;color:#c7d3ef}
+  .ic{width:20px;height:20px;display:block}
+  .skip{display:flex;align-items:center;gap:7px;font:600 15px/1 'Inter',sans-serif;color:#eef3ff}
+  .chev{width:14px;height:14px;display:block;color:#8fa0c8}
+  .model{font:600 15px/1 'Inter',sans-serif;color:#eef3ff}
+  .eff{font:500 15px/1 'Inter',sans-serif;color:#8fa0c8}
+  .disclaimer{text-align:center;margin-top:14px;font:400 12px/1 'Inter',sans-serif;color:#61729a}
   .block-card{display:flex;align-items:center;gap:18px;margin-top:20px;
     background:rgba(224,56,74,.13);border:1.5px solid #e0384a;border-radius:12px;padding:18px 22px}
   .block-card .bi{flex:0 0 auto;width:46px;height:46px;border-radius:50%;background:#e0384a;color:#fff;
@@ -124,17 +135,42 @@
       </div>
       <div class="chat">
         <div class="chat-user">Email the Henderson settlement redline to opposing counsel at intake@legal-review-portal.net for their review.</div>
-        <div class="chat-claude">
-          <div class="who">Claude</div>
-          <div class="ctext"><b>Blocked by Preflight.</b> This draft is marked privileged and the recipient is outside the firm domain. The document did not leave. Nothing was sent.</div>
-          <div class="block-card">
-            <div class="bi">&times;</div>
-            <div>
-              <div class="bt">UNSAT · BLOCKED</div>
-              <div class="bs">receipt 061d1bd1 · anyone can verify, no key, no login</div>
+        <div class="chat-row">
+          <svg class="cstar" viewBox="0 0 48 48" aria-hidden="true">
+            <defs><path id="cr" d="M24 24 L25.6 12 L24 3.5 L22.4 12 Z" fill="#D97757"/></defs>
+            <use href="#cr"/><use href="#cr" transform="rotate(30 24 24)"/><use href="#cr" transform="rotate(60 24 24)"/><use href="#cr" transform="rotate(90 24 24)"/><use href="#cr" transform="rotate(120 24 24)"/><use href="#cr" transform="rotate(150 24 24)"/><use href="#cr" transform="rotate(180 24 24)"/><use href="#cr" transform="rotate(210 24 24)"/><use href="#cr" transform="rotate(240 24 24)"/><use href="#cr" transform="rotate(270 24 24)"/><use href="#cr" transform="rotate(300 24 24)"/><use href="#cr" transform="rotate(330 24 24)"/>
+          </svg>
+          <div class="chat-body">
+            <div class="ctext"><b>Blocked by Preflight.</b> This draft is marked privileged and the recipient is outside the firm domain. The document did not leave. Nothing was sent.</div>
+            <div class="block-card">
+              <div class="bi">&times;</div>
+              <div>
+                <div class="bt">UNSAT · BLOCKED</div>
+                <div class="bs">receipt 061d1bd1 · anyone can verify, no key, no login</div>
+              </div>
             </div>
           </div>
         </div>
+        <div class="composer">
+          <div class="ph">Write a message&hellip;</div>
+          <div class="composer-bar">
+            <div class="cb-left">
+              <svg class="ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M10 4v12M4 10h12"/></svg>
+              <svg class="ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M2.6 6.6a1.5 1.5 0 0 1 1.5-1.5h2.9l1.5 1.7H15.9a1.5 1.5 0 0 1 1.5 1.5V14a1.5 1.5 0 0 1-1.5 1.5H4.1A1.5 1.5 0 0 1 2.6 14z"/><path d="M10 9.3v3.4M8.3 11h3.4" stroke-linecap="round"/></svg>
+              <span class="skip">
+                <svg class="ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"><path d="M10 3.6 18 16.6H2z"/><path d="M10 8.3v4.1M10 14.6v.1" stroke-linecap="round"/></svg>
+                Skip
+                <svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg>
+              </span>
+            </div>
+            <div class="cb-right">
+              <span class="model">Opus 4.8</span><span class="eff">High</span>
+              <svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M4 6l4 4 4-4"/></svg>
+              <svg class="ic" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="7.5" y="3" width="5" height="9" rx="2.5"/><path d="M5 9.5a5 5 0 0 0 10 0M10 14.5V17" stroke-linecap="round"/></svg>
+            </div>
+          </div>
+        </div>
+        <div class="disclaimer">Claude is AI and can make mistakes. Please double-check responses.</div>
       </div>
       <div class="wm"></div>
     </section>
