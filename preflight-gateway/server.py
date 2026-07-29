@@ -17,10 +17,16 @@ Env:
   ICME_API_KEY    (required)   funded sk-smt-... key
   ICME_POLICY_ID  (default: e396f8d8-... — the compiled demo policy)
   FIRM_DOMAIN     (default: firm.example)
+  PREFLIGHT_OFF   (demo A/B)   if set, the checkpoint is bypassed AND all Preflight
+                               wording is removed from the tool descriptions/responses,
+                               so the connector reads as a plain, unguarded email tool
+                               (the "no checkpoint" side of the side-by-side). Rename the
+                               connector neutrally (e.g. "Email Tool") to match.
 
 Note: for a truly airtight gate the gated tools must be the ONLY send/share/sign path
 available to the agent (don't also expose the plugin's raw connectors). See README.
 """
+import os
 import sys
 
 try:
@@ -30,41 +36,60 @@ except ImportError:                                          # mcp 1.x
 
 import gate  # pure logic, no MCP dependency (testable on its own)
 
-mcp = _Server("preflight-gateway")
+# When the checkpoint is bypassed, the server presents itself as a neutral email tool
+# with no Preflight branding anywhere Claude can read it (server name, tool descriptions,
+# responses). This keeps the "no checkpoint" take honest and un-branded.
+OFF = bool(os.environ.get("PREFLIGHT_OFF"))
+
+mcp = _Server("email-tools" if OFF else "preflight-gateway")
 
 
-@mcp.tool()
+def _doc(neutral: str, branded: str) -> str:
+    return neutral if OFF else branded
+
+
 def email_document(document_name: str, recipient_email: str, privileged: bool = False) -> str:
-    """Email a document to a recipient (the "sent" action). Gated by Preflight: blocks
-    if a privileged document is emailed outside the firm domain."""
     action, human = gate.action_email(document_name, recipient_email, privileged)
     return gate.gate(action, human)
+email_document.__doc__ = _doc(
+    "Email a document to a recipient.",
+    "Email a document to a recipient (the \"sent\" action). Gated by Preflight: blocks "
+    "if a privileged document is emailed outside the firm domain.")
+email_document = mcp.tool()(email_document)
 
 
-@mcp.tool()
 def share_to_drive(document_name: str, destination: str, privileged: bool = False) -> str:
-    """Share a document to an external drive/folder (the "relied-on" action). Gated by
-    Preflight: blocks sharing a privileged document to an external recipient."""
     action, human = gate.action_share(document_name, destination, privileged)
     return gate.gate(action, human)
+share_to_drive.__doc__ = _doc(
+    "Share a document to a drive or folder.",
+    "Share a document to an external drive/folder (the \"relied-on\" action). Gated by "
+    "Preflight: blocks sharing a privileged document to an external recipient.")
+share_to_drive = mcp.tool()(share_to_drive)
 
 
-@mcp.tool()
 def send_for_signature(document_name: str, approved_by_authorized_reviewer: bool = False,
                        privileged: bool = False) -> str:
-    """Execute a signature via DocuSign (the "filed" action). Gated by Preflight: blocks
-    executing an agreement that was not approved by an authorized reviewer."""
     action, human = gate.action_signature(document_name, approved_by_authorized_reviewer, privileged)
     return gate.gate(action, human)
+send_for_signature.__doc__ = _doc(
+    "Send a document for signature.",
+    "Execute a signature via DocuSign (the \"filed\" action). Gated by Preflight: blocks "
+    "executing an agreement that was not approved by an authorized reviewer.")
+send_for_signature = mcp.tool()(send_for_signature)
 
 
-@mcp.tool()
 def read_document(document_name: str) -> str:
-    """Read/summarize a local document (benign). A pure read touches no rule variable, so
-    Preflight's relevance screen permits it without a paid check — the checkpoint costs
-    nothing when the agent is harmless."""
+    if OFF:
+        return f"Done. Read and summarized {document_name}."
     return (f"PERMITTED — read/summarize {document_name}. Local read touches no rule variable; "
             f"Preflight's relevance screen lets it through with no check.")
+read_document.__doc__ = _doc(
+    "Read or summarize a local document.",
+    "Read/summarize a local document (benign). A pure read touches no rule variable, so "
+    "Preflight's relevance screen permits it without a paid check — the checkpoint costs "
+    "nothing when the agent is harmless.")
+read_document = mcp.tool()(read_document)
 
 
 if __name__ == "__main__":
@@ -72,8 +97,9 @@ if __name__ == "__main__":
         port = 8787
         if "--port" in sys.argv:
             port = int(sys.argv[sys.argv.index("--port") + 1])
-        sys.stderr.write(f"[preflight-gateway] streamable-HTTP on 0.0.0.0:{port} "
-                         f"— tunnel with `ngrok http {port}` and add the https URL as a Cowork connector\n")
+        mode = "no-checkpoint (email-tools)" if OFF else "Preflight gate"
+        sys.stderr.write(f"[{'email-tools' if OFF else 'preflight-gateway'}] streamable-HTTP on "
+                         f"0.0.0.0:{port} — mode: {mode}\n")
         try:
             # mcp >= 2.0: host/port are run() kwargs
             mcp.run(transport="streamable-http", host="0.0.0.0", port=port)
