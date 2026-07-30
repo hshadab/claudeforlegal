@@ -22,7 +22,7 @@ That's why the same exact prompt has different outcomes with and without Preflig
 
 Every check leaves a receipt of the allowed or blocked decision. Anyone can verify it in under a second, with no key and no login.
 
-Lawyers can now expand the scope of the work they give to agents with the confidence that their rules will be followed exactly.
+You can now prove your AI workflows followed your rules. Every action checked before it runs, with a receipt anyone can verify.
 
 For more information: houman@icme.io, or docs.icme.io.
 
@@ -40,7 +40,7 @@ For more information: houman@icme.io, or docs.icme.io.
 
 ## Notes before you post
 - Wyatt sign-off: absolutes for his glance are "without exception" (post hook, video title
-  card, step 3), "followed exactly" (post closer), and "never misses" (deck cover).
+  card, step 3), and "never misses" (deck cover).
 - Comment-thread answers if asked: Preflight checks actions routed through it, and
   comprehensiveness comes from the org making it the enforced send path (like email DLP).
   Say tamper-evident, not tamper-proof. Do not say audited.
