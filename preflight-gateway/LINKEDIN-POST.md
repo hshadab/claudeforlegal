@@ -8,22 +8,21 @@ post body does the framing. Lead with the first two lines (they sit above the
 
 ## Post body
 
-Claude can review a contract. It can also send, file, and sign.
-That last part is where the risk lives.
+Lawyers can now add guardrails to Claude to prevent mistakes in AI-driven workflows and actions.
 
-The risk is not a rogue AI talking its way past a rule. It is a mistake. A model slips, or a lawyer clicks the wrong button late at night, and a privileged draft is on its way to the other side.
+Claude can review a contract. It can also send, file, and sign. That last part is where the risk lives. Not a rogue AI talking its way past a rule. A mistake. A model slips, or a lawyer clicks the wrong button late at night, and a privileged draft is on its way to the other side.
 
-So we built Preflight at ICME Labs, a fail-safe that checks every agent action against your firm's rules before it runs. The firm writes the rules in plain English. They are translated into formal logic, and a mathematical process checks every action the same way every time.
+Preflight from ICME Labs is the guardrail. A lawyer writes a rule in plain English. Preflight translates it into formal logic, and a mathematical process decides whether to allow or block each agent action, following the rule consistently.
 
 In the video: the same prompt, run twice.
 Without Preflight, Claude mistakenly sends a privileged document to an outside address.
 With the Preflight connector on, the agent's send is blocked and the document never leaves.
 
-Every check also leaves a receipt. Anyone can verify the decision in under a second, with no key and no login. A log is written after the fact and trusted on faith. A receipt is proof.
+Every check leaves a receipt of the allowed or blocked decision. Anyone can verify it in under a second, with no key and no login. A log is written after the fact and trusted on faith. A receipt is proof.
 
 The value is what a general counsel can tell the board: every agent action was checked before it ran, and here is a receipt the board can verify.
 
-To get started: houman@icme.io, or docs.icme.io.
+For more information: houman@icme.io, or docs.icme.io.
 
 #LegalTech #AIAgents #Compliance #LegalOps #GenAI
 
