@@ -32,14 +32,14 @@ To get started: houman@icme.io, or docs.icme.io.
 ## Tagging
 - Tag the ICME Labs company page and cofounder Wyatt so the post reaches both networks.
 - Anthropic: tagging @Anthropic widens reach but invites their team to read closely while
-  the "catch every mistake" claim and the Claude-branded interface recreation are still
+  the claims and the Claude-branded interface recreation are still
   awaiting Wyatt's sign-off. Tag them only once the claims are cleared; otherwise let the
   post earn its own reach first.
 - Skip individual GCs/lawyers on the first post; tag-spamming reads as sales outreach.
 
 ## Notes before you post
-- Wyatt sign-off: the video title now says "catch every mistake" (the deck cover still says
-  "never misses"); both are absolutes worth his glance before publishing.
+- Wyatt sign-off: the video title now says "prevent mistakes" (softer). Remaining absolutes
+  for his glance: "without exception" (step 3) and "never misses" (deck cover).
 - Comment-thread answers if asked: Preflight checks actions routed through it, and
   comprehensiveness comes from the org making it the enforced send path (like email DLP).
   Say tamper-evident, not tamper-proof. Do not say audited.
