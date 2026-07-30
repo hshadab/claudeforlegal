@@ -15,9 +15,9 @@ The risk is not a rogue AI talking its way past a rule. It is a mistake. A model
 
 So we built Preflight, a fail-safe that checks every agent action against your firm's rules before it runs. The firm writes the rules in plain English. They are translated into formal logic, and a mathematical process checks every action the same way every time.
 
-In the video: the same prompt, twice.
+In the video: the same prompt, run twice.
 Without Preflight, Claude mistakenly sends a privileged document to an outside address.
-With the Preflight connector on, the same prompt is blocked and the document never leaves.
+With the Preflight connector on, the agent's send is blocked and the document never leaves.
 
 Every check also leaves a receipt. Anyone can verify the decision in under a second, with no key and no login. A log is written after the fact and trusted on faith. A receipt is proof.
 
@@ -30,8 +30,8 @@ To get started: houman@icme.io, or docs.icme.io.
 ---
 
 ## Notes before you post
-- Wyatt sign-off is still open on "never misses" (it appears on the video title card).
-  The post body avoids the absolute; clear the title-card language before it goes public.
+- Wyatt sign-off: the video title now says "catch every mistake" (the deck cover still says
+  "never misses"); both are absolutes worth his glance before publishing.
 - Comment-thread answers if asked: Preflight checks actions routed through it, and
   comprehensiveness comes from the org making it the enforced send path (like email DLP).
   Say tamper-evident, not tamper-proof. Do not say audited.
