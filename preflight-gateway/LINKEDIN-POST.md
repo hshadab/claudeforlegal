@@ -12,7 +12,7 @@ Lawyers can now add guardrails to Claude to prevent mistakes in AI-driven workfl
 
 Claude can review a contract. It can also send, file, and sign. That last part is where the risk lives. Not a rogue AI talking its way past a rule. A mistake. A model slips, or a lawyer clicks the wrong button late at night, and a privileged draft is on its way to the other side.
 
-Preflight from ICME Labs is the guardrail. A lawyer writes a rule in plain English. Preflight translates it into formal logic, and a mathematical process decides whether to allow or block each agent action, following the rule consistently.
+Preflight from ICME Labs is the guardrail. A lawyer writes a rule in plain English. Preflight translates it into formal logic, and a mathematical process applies the rule to decide whether to allow or block each agent action, consistently.
 
 In the video: the same prompt, run twice.
 Without Preflight, Claude mistakenly sends a privileged document to an outside address.
@@ -20,7 +20,7 @@ With the Preflight connector on, the agent's send is blocked and the document ne
 
 Every check leaves a receipt of the allowed or blocked decision. Anyone can verify it in under a second, with no key and no login. A log is written after the fact and trusted on faith. A receipt is proof.
 
-The value is what a general counsel can tell the board: every agent action was checked before it ran, and here is a receipt the board can verify.
+You can now prove your AI workflows followed your rules. Every action checked before it runs, with a receipt anyone can verify.
 
 For more information: houman@icme.io, or docs.icme.io.
 
@@ -37,8 +37,8 @@ For more information: houman@icme.io, or docs.icme.io.
 - Skip individual GCs/lawyers on the first post; tag-spamming reads as sales outreach.
 
 ## Notes before you post
-- Wyatt sign-off: the video title now says "prevent mistakes" (softer). Remaining absolutes
-  for his glance: "without exception" (step 3) and "never misses" (deck cover).
+- Wyatt sign-off: absolutes for his glance are "without exception" (video title card and
+  step 3) and "never misses" (deck cover).
 - Comment-thread answers if asked: Preflight checks actions routed through it, and
   comprehensiveness comes from the org making it the enforced send path (like email DLP).
   Say tamper-evident, not tamper-proof. Do not say audited.
